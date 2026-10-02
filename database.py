@@ -1,13 +1,10 @@
 from contextlib import contextmanager
-from pathlib import Path
-
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
 
 class Base(DeclarativeBase):
     pass
-
 
 _engine = None
 _SessionLocal = None
@@ -40,8 +37,31 @@ def session_scope():
         session.close()
 
 
+def _add_missing_columns(connection, table, columns):
+    existing = {column["name"] for column in inspect(connection).get_columns(table)}
+    for name, definition in columns.items():
+        if name not in existing:
+            connection.execute(text(f"ALTER TABLE {table} ADD COLUMN {name} {definition}"))
+
+
 def init_db():
     from models.client import Client  # noqa: F401
-    from models.invoice import Invoice, InvoiceItem  # noqa: F401
+    from models.invoice import AuditTrail, Invoice, InvoiceItem  # noqa: F401
     from models.user import User  # noqa: F401
     Base.metadata.create_all(_engine)
+    if _engine.dialect.name != "sqlite":
+        return
+    with _engine.begin() as connection:
+        _add_missing_columns(connection, "invoices", {
+            "currency": "VARCHAR(3) NOT NULL DEFAULT 'USD'",
+            "tds_enabled": "BOOLEAN NOT NULL DEFAULT 0",
+            "tds_type": "VARCHAR(10) NOT NULL DEFAULT 'percent'",
+            "tds_rate": "NUMERIC(12, 2) NOT NULL DEFAULT 0",
+        })
+        _add_missing_columns(connection, "invoice_items", {
+            "item_code": "VARCHAR(80) NOT NULL DEFAULT ''",
+            "item_name": "VARCHAR(200) NOT NULL DEFAULT ''",
+            "discount": "NUMERIC(12, 2) NOT NULL DEFAULT 0",
+            "tax_rate": "NUMERIC(5, 2) NOT NULL DEFAULT 0",
+        })
+        connection.execute(text("UPDATE invoice_items SET item_name = description WHERE item_name = ''"))

@@ -42,9 +42,10 @@ def create_app(test_config=None):
         return render_template("dashboard.html")
 
     @app.get("/invoice/new")
-    def invoice_form():
+    @app.get("/invoice/<int:invoice_id>/edit")
+    def invoice_form(invoice_id=None):
         if not session.get("user_id"): return redirect(url_for("login_page"))
-        return render_template("invoice_form.html")
+        return render_template("invoice_form.html", invoice_id=invoice_id)
 
     with get_session() as db:
         if not db.scalar(select(User).where(User.email == "admin@example.com")):
