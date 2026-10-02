@@ -19,14 +19,22 @@ A modular invoicing system built with **Flask**, **SQLAlchemy**, **SQLite**, and
 - Responsive dashboard and invoice review/edit interface
 - Historical invoices keep their saved currency, rates, discounts, tax, and TDS configuration
 
-## Quick start
+## Quick start on Windows
 
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-python app.py
+From PowerShell, run these commands in the project folder:
+
+```powershell
+py -m pip install -r requirements.txt
+py app.py
 ```
+
+If the app is already installed and only PDF export is failing:
+
+```powershell
+py -m pip install reportlab
+```
+
+ReportLab is loaded only when PDF export is requested, so the application itself can still start without it. The PDF endpoint will return an installation message until ReportLab is installed.
 
 Open `http://localhost:5000`.
 

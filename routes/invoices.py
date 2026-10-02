@@ -4,11 +4,6 @@ from decimal import Decimal, InvalidOperation
 from io import BytesIO
 
 from flask import Blueprint, jsonify, request, send_file, session
-from reportlab.lib import colors
-from reportlab.lib.pagesizes import A4
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.lib.units import mm
-from reportlab.platypus import SimpleDocTemplate, Spacer, Table, TableStyle, Paragraph
 from sqlalchemy import func, select
 
 from database import get_session
@@ -136,6 +131,14 @@ def invoice_audit(invoice_id):
 def invoice_pdf(invoice_id):
     user = current_user()
     if not user: return jsonify({"error": "Authentication required."}), 401
+    try:
+        from reportlab.lib import colors
+        from reportlab.lib.pagesizes import A4
+        from reportlab.lib.styles import getSampleStyleSheet
+        from reportlab.lib.units import mm
+        from reportlab.platypus import SimpleDocTemplate, Spacer, Table, TableStyle, Paragraph
+    except ModuleNotFoundError:
+        return jsonify({"error": "PDF export requires ReportLab. Run: python -m pip install reportlab"}), 503
     with get_session() as db:
         invoice = _find_invoice(db, invoice_id, user)
         if not invoice: return jsonify({"error": "Invoice not found."}), 404
