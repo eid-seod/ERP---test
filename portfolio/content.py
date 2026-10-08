@@ -1,30 +1,49 @@
-"""Public copy based on the owner's supplied positioning, not an invented résumé."""
+"""Arabic portfolio content; contains no accounting application logic."""
 
 SERVICES = [
-    {"number": "01", "title": "Remote Accounting", "tag": "RELIABLE, WHEREVER YOU ARE", "description": "Ongoing accounting support that fits your business—from organizing day-to-day records to maintaining a clearer view of receivables and payables.", "details": ["Bookkeeping support", "Receivables & payables", "Regular financial visibility"]},
-    {"number": "02", "title": "Financial Management", "tag": "TURN INFORMATION INTO DIRECTION", "description": "Bring structure to financial reporting, cash-flow planning, and management information so your next decision is informed, not a guess.", "details": ["Management reporting", "Cash-flow planning", "Budget monitoring"]},
-    {"number": "03", "title": "ERP Implementation", "tag": "ODOO & ZOHO BOOKS", "description": "Practical implementation support for Odoo and Zoho Books, connecting accounting requirements with system configuration and everyday workflows.", "details": ["Requirements mapping", "Configuration support", "Workflow alignment"]},
-    {"number": "04", "title": "Accounting System Setup", "tag": "START WITH THE RIGHT FOUNDATION", "description": "Set up the structure behind your accounting operations: a sensible chart of accounts, organized invoicing, and clear processes for your team.", "details": ["Chart of accounts", "Invoicing setup", "Process documentation"]},
-    {"number": "05", "title": "Financial Assessment & Improvement", "tag": "ASSESS. SIMPLIFY. IMPROVE.", "description": "Review how accounting processes and systems work together. Identify gaps, strengthen controls, and create a practical direction for improvement.", "details": ["Process review", "Control assessment", "Improvement roadmap"]},
+    {"number": "01", "title": "خدمات Accounting عن بُعد", "tag": "دعم مهني أينما كانت أعمالك", "description": "متابعة العمليات المالية اليومية وتنظيم السجلات والتنسيق مع فريقك، مع وضوح في المسؤوليات وإيقاع عمل يناسب نشاطك.", "details": ["تنظيم المستندات", "متابعة الحسابات", "دعم دوري عن بُعد"]},
+    {"number": "02", "title": "خدمات Financial Reporting", "tag": "معلومات تساعدك على اتخاذ القرار", "description": "إعداد تقارير إدارية واضحة وربط البيانات المالية باحتياجات الإدارة، مع عرض مؤشرات الأداء وقراءة Financial Statements ضمن سياق أعمالك.", "details": ["تقارير إدارية", "قراءة Financial Statements", "متابعة الأداء"]},
+    {"number": "03", "title": "خدمات Bookkeeping", "tag": "سجلات منظمة من البداية", "description": "تنظيم تسجيل المعاملات ومستنداتها ومراجعة اتساق السجلات، لدعم دقة المعلومات وسهولة الرجوع إليها.", "details": ["تنظيم القيود", "مراجعة المستندات", "تسويات دورية"]},
+    {"number": "04", "title": "خدمات Budgeting وForecasting", "tag": "التخطيط المالي بخطوات واضحة", "description": "دعم إعداد الموازنات والتوقعات المالية ومتابعة الفروق بين المخطط والفعلي، مع توضيح الافتراضات التي تستند إليها الأرقام.", "details": ["إعداد Budgeting", "تحديث Forecasting", "تحليل الانحرافات"]},
+    {"number": "05", "title": "إدارة Cash Flow", "tag": "رؤية أوضح لحركة السيولة", "description": "تنظيم متابعة التدفقات الداخلة والخارجة والتزامات السداد، لتوفير رؤية عملية للسيولة والاحتياجات القريبة.", "details": ["متابعة التحصيل", "خطط السداد", "توقعات السيولة"]},
+    {"number": "06", "title": "إدارة Payroll", "tag": "عملية منظمة وقابلة للمراجعة", "description": "دعم تنظيم بيانات الرواتب ومراجعة مدخلاتها وتقاريرها والتنسيق مع أصحاب المسؤولية، وفق السياسات والمتطلبات المحلية المعمول بها.", "details": ["تنظيم البيانات", "مراجعة المدخلات", "تقارير الرواتب"]},
+    {"number": "07", "title": "دعم Tax وVAT", "tag": "تنظيم البيانات والمتطلبات", "description": "المساعدة في تنظيم السجلات والمستندات وتجهيز المعلومات اللازمة للمراجعة الضريبية، وفق متطلبات الدولة ونطاق الخدمة المتفق عليه.", "details": ["تنظيم المستندات", "مراجعة البيانات", "دعم إجراءات المطابقة"]},
+    {"number": "08", "title": "إعداد أنظمة Accounting", "tag": "أساس مناسب لعملياتك", "description": "تنظيم دليل الحسابات والفوترة والإجراءات وتحديد احتياجات العمل قبل إعداد النظام، حتى تخدم التقنية العملية المحاسبية وليس العكس.", "details": ["دليل الحسابات", "إعداد الفوترة", "توثيق الإجراءات"]},
+    {"number": "09", "title": "خدمات ERP Implementation", "tag": "ربط احتياجات العمل بالنظام", "description": "دعم تحديد المتطلبات وربط العمليات وإعداد خطة Implementation مناسبة، مع مراعاة البيانات والصلاحيات واحتياجات المستخدمين.", "details": ["تحليل المتطلبات", "تنظيم العمليات", "متابعة التنفيذ"]},
+    {"number": "10", "title": "خدمات Odoo Implementation", "tag": "تهيئة عملية لبيئة أعمالك", "description": "دعم إعداد Odoo بما يناسب الاحتياجات المالية والتشغيلية، من تحديد المتطلبات إلى تهيئة مسارات العمل ومساندة الاستخدام.", "details": ["تحليل الاحتياجات", "دعم التهيئة", "تنظيم مسارات العمل"]},
+    {"number": "11", "title": "خدمات Zoho Books Implementation", "tag": "نظام منظم وسهل المتابعة", "description": "دعم إعداد Zoho Books وتنظيم بياناته وإجراءات الفوترة والتقارير بما يتناسب مع طريقة عمل نشاطك.", "details": ["تهيئة الحسابات", "تنظيم البيانات", "إعداد التقارير"]},
+    {"number": "12", "title": "تقييم الوضع المالي وتحسينه", "tag": "تقييم مدروس وتحسين عملي", "description": "مراجعة طريقة عمل الإجراءات والأنظمة المالية، وتحديد نقاط الضعف وفرص التحسين، مع خطة واضحة قابلة للتطبيق والمتابعة.", "details": ["مراجعة الإجراءات", "تقييم الضوابط", "خطة تحسين"]},
 ]
 
-EXPERIENCE = [
-    {"number": "01", "title": "Accounts Management", "subtitle": "Financial operations & reporting", "description": "My professional focus includes organizing accounting operations, supporting financial reporting, and building dependable processes."},
-    {"number": "02", "title": "Finance & Advisory", "subtitle": "Analysis & business decisions", "description": "I connect financial information with practical business needs through financial management, accounting consultancy, and process improvement."},
-    {"number": "03", "title": "Financial Systems", "subtitle": "ERP & accounting workflows", "description": "My work brings accounting and technology together through system setup, ERP implementation services, and an accounting software project."},
+EXPERTISE = [
+    {"number": "01", "title": "إدارة الحسابات", "description": "تنظيم العمليات المحاسبية ودعم التقارير وبناء إجراءات مالية يمكن الاعتماد عليها."},
+    {"number": "02", "title": "الإدارة والاستشارات المالية", "description": "ربط المعلومات المالية باحتياجات العمل، ودعم الإدارة في قراءة الأداء وتحديد أولويات التحسين."},
+    {"number": "03", "title": "الأنظمة المالية وERP", "description": "الجمع بين المعرفة المحاسبية والتقنية من خلال إعداد الأنظمة وخدمات Implementation والحلول العملية."},
 ]
 
 SOFTWARE_FEATURES = [
-    {"title": "Itemized invoicing", "description": "Item codes, descriptions, quantities, prices, discounts, and tax calculations."},
-    {"title": "TDS & currencies", "description": "Invoice-level percentage or fixed withholding and multiple currency selections."},
-    {"title": "Client management", "description": "A dedicated view of clients alongside the invoicing workflow."},
-    {"title": "Access & audit history", "description": "User roles, controlled invoice editing, and recorded invoice changes."},
-    {"title": "PDF & print", "description": "Invoice exports and print actions within the existing application."},
-    {"title": "Financial summary", "description": "Subtotal, discount, tax, grand total, TDS, and net payable at a glance."},
+    {"title": "فواتير تفصيلية", "description": "أكواد الأصناف وأسماؤها وكمياتها وأسعارها والخصومات وحساب Tax ضمن الفاتورة."},
+    {"title": "العملات والاستقطاع الضريبي", "description": "اختيار عملة الفاتورة وإعداد الاستقطاع كنسبة أو مبلغ ثابت في النظام الحالي."},
+    {"title": "إدارة العملاء", "description": "عرض بيانات العملاء ومتابعة علاقتهم بعمليات الفوترة."},
+    {"title": "الصلاحيات وسجل التعديلات", "description": "أدوار المستخدمين وضوابط تعديل الفواتير وسجل يوضح التغييرات."},
+    {"title": "الطباعة وتصدير الفواتير", "description": "إجراءات الطباعة وتصدير مستند الفاتورة من التطبيق القائم."},
+    {"title": "ملخص مالي وDashboard", "description": "عرض المبالغ والخصومات وTax والاستقطاع وصافي المستحق ضمن الشاشات الموجودة."},
 ]
 
-SOFTWARE_BENEFITS = [
-    "Bring invoice information into one workflow.",
-    "Reduce manual recalculation of line items and totals.",
-    "Keep a clearer history of invoice changes.",
+ARTICLES = [
+    {"slug": "financial-reporting-clarity", "category": "Financial Reporting", "title": "كيف تجعل تقاريرك المالية أكثر فائدة للإدارة؟", "excerpt": "وضوح السؤال الإداري أهم من كثرة الأرقام. ابدأ بالتقارير التي تساعدك على فهم الأداء واتخاذ القرار.", "sections": [
+        {"title": "ابدأ بالسؤال، لا بالقالب", "text": "حدد أولاً ما تحتاج الإدارة إلى معرفته: كيف يتغير الأداء؟ أين ترتفع التكاليف؟ وما الالتزامات القادمة؟ يساعد ذلك على اختيار Financial Reporting المناسب بدلاً من إنتاج تقارير كثيرة بلا هدف واضح."},
+        {"title": "اربط الأرقام بالسياق", "text": "قراءة Financial Statements تحتاج إلى مقارنة الفترات وتوضيح الافتراضات والأحداث المؤثرة. اعرض الفروق المهمة بلغة عملية، وميّز بين البيانات الفعلية والتقديرات."},
+        {"title": "اعتمد إيقاعاً ثابتاً للمراجعة", "text": "حدد دورية التقارير ومسؤولية إعدادها ومراجعتها. تنظيم Bookkeeping وجودة المستندات هما أساس التقارير الموثوقة. هذه إرشادات عامة، ويجب تكييفها مع نشاطك ونطاق عملك."},
+    ]},
+    {"slug": "cash-flow-planning", "category": "Cash Flow", "title": "رؤية أفضل للسيولة تبدأ بخطة بسيطة", "excerpt": "متابعة التحصيل والمدفوعات تساعد على فهم الاحتياجات القريبة، بعيداً عن الخلط بين الربح والسيولة.", "sections": [
+        {"title": "افصل بين الربح والسيولة", "text": "قد تظهر نتائج النشاط بصورة إيجابية بينما تتأخر التحصيلات أو تتراكم الالتزامات. لذلك يحتاج Cash Flow إلى متابعة مستقلة توضح توقيت التدفقات الفعلية، لا مجرد قيمة الإيرادات."},
+        {"title": "اجعل الافتراضات واضحة", "text": "سجّل المبالغ المتوقعة ومواعيد التحصيل والسداد ومستوى الثقة في كل تقدير. استخدم Forecasting لتحديث الصورة عند تغير المعطيات، ولا تتعامل مع التوقعات بوصفها نتائج مؤكدة."},
+        {"title": "راجع الخطة بانتظام", "text": "قارن التوقعات بما حدث فعلياً وراجع أسباب الاختلاف. يساعد Budgeting المنظم على ربط أولويات الإنفاق بالموارد المتاحة. الأداة تدعم القرار، لكنها لا تستبدل فهم طبيعة العمل."},
+    ]},
+    {"slug": "erp-implementation-foundations", "category": "ERP Implementation", "title": "قبل إعداد النظام: افهم طريقة عملك أولاً", "excerpt": "نجاح ERP لا يبدأ باختيار الشاشة؛ بل بتحديد الإجراءات والبيانات والمسؤوليات التي يخدمها النظام.", "sections": [
+        {"title": "وثّق الإجراءات الحالية", "text": "حدد كيف تنتقل المعاملة من بدايتها إلى تسجيلها ومراجعتها، ومن يملك كل خطوة. يسهل ذلك تحديد ما يحتاج إلى تبسيط قبل بدء Implementation."},
+        {"title": "راجع البيانات والصلاحيات", "text": "جهز البيانات وراجع اتساقها وحدد الصلاحيات المطلوبة لكل دور. سواء اخترت Odoo أو Zoho Books، يجب أن تكون إعدادات النظام مرتبطة بمتطلبات العمل الفعلية."},
+        {"title": "ابدأ بنطاق واضح", "text": "حدد نطاق التنفيذ ومراحل الاستخدام والتدريب ومعايير القبول. اختبر سيناريوهات العمل الأساسية قبل الاعتماد النهائي. تختلف المتطلبات حسب الدولة والنشاط، ولا تعني أسماء الأنظمة وجود شراكة أو اعتماد رسمي."},
+    ]},
 ]

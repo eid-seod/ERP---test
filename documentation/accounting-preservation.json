@@ -1,0 +1,33 @@
+{
+  "baseline_commit": "551f23d49e75cb296cbf61e7162fc04fe7c730bc",
+  "captured_at": "2026-10-08T07:47:26.576181+00:00",
+  "files": {
+    ".gitattributes": "1a1dbe176bc233b499d35a57db7513f2941c99ab9759f177830c9149be99005b",
+    ".gitignore": "505b0d598238d6a142323438e56975e95ca8a8d71f62245a62101d21a1340827",
+    "README.md": "286620330cc3ebb278d89e6cb40bc37e0cfffc816ee8bce29e0920026a0ee630",
+    "app.py": "6c226aada544697018c39f7329f6359d50e89346f23fdf5d4eef9880adccd091",
+    "branding.py": "b0abaf0f8173adb3e050ec486b6f364687383396eab1a3c70861847a0c548c27",
+    "database.py": "113516ecc8ae6c5e2c0bf094e1b9345c988c6894256e0d5fbfd52d1a49cb9e9e",
+    "models/__init__.py": "d19cca67eb724d661d35dcc1516001374be3d0a87dfcfeb23015100f71a965ac",
+    "models/client.py": "a92caa8420e2c6624e50e75101b271379e23b4b4e0491312ac8a6a8a3aae5029",
+    "models/invoice.py": "dcebe03fa52974b8849bc0fdde79e38ff4dcc6884eb9ec161b57148c48a1b7fb",
+    "models/user.py": "ccb3dc64bcaa360b038dbeb942369a2acf01008a5f4621b219db4deb43a292f6",
+    "pytest.ini": "07e12af78809b103a9e003b9bf24f9718928fa263046b37bf3ebc9ebbf802ceb",
+    "requirements.txt": "c5d1fb3268e97510968cf7333a776bf900fae9b4926c503a3ccfd8a95af5b9a0",
+    "routes/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "routes/auth.py": "c10051d01f2bb922ba1c47ee8f9217e523765ac970b46b40a053f3c2ee836d41",
+    "routes/clients.py": "2eb3d9741cf5aadbc4627374ea78e9b0863cf6e47d4fecee5b802c38662a5b5c",
+    "routes/invoices.py": "97cf46ebf6dd7efcbd62b9bf84da1d9113eabc6a6a9df5413ce8e021bbf37b8b",
+    "static/css/app.css": "7296e1504f21a2ffca80f0f9e8eb6e95c6568229eb6b5dede55322e01e5d1dac",
+    "static/js/app.js": "a99986b486c5da05b10904282f8c610ee868e908a313f69126d65f8a898c04e4",
+    "templates/dashboard.html": "66b52815bee59173122284736dfab33f9d1613957974498d1c08e44da371342e",
+    "templates/invoice_form.html": "e29db4033e777b9864b443a5f2633697c326d87874954f42ef76c03ff1196c7a",
+    "templates/login.html": "dc9f56b3206ca41a130ae99a772ec39ca4bddefeb8c8fdaf546c8b21f3f72275",
+    "tests/test_app.py": "cccf96d1d9dc7f4f9eb11ae538d7d923e119c5b46b0f05f03248304aae3e5817"
+  },
+  "database": {
+    "relative_path": "database.db",
+    "sha256": "35a670d9bf59d97c21db14e735054fa3a25422361308cc5bf5680aa30504cc9f",
+    "inode": 1372049
+  }
+}

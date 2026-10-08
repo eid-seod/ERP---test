@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}{{ article.title }} | عيد سعيد محمود{% endblock %}
+{% block description %}{{ article.excerpt }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ article.title }} — عيد سعيد محمود{% endblock %}
+{% block content %}
+<article class="article-page section-container">
+  <a class="quiet-link" href="/#blog">العودة إلى المدونة <span aria-hidden="true">←</span></a>
+  <div class="eyebrow">{{ article.category|terms }}</div>
+  <h1>{{ article.title }}</h1>
+  <p class="article-lead">{{ article.excerpt }}</p>
+  <p class="article-byline">من الملف المهني لعيد سعيد محمود</p>
+  <div class="article-body">{% for section in article.sections %}<section><h2>{{ section.title }}</h2><p>{{ section.text|terms }}</p></section>{% endfor %}</div>
+  <div class="article-cta"><h3>تحتاج إلى تطبيق هذه الأفكار على أعمالك؟</h3><p>لنتحدث عن احتياجاتك ونطاق الدعم المناسب.</p><a class="button primary" href="/#contact">تواصل معي <span aria-hidden="true">↖</span></a></div>
+</article>
+{% endblock %}

@@ -1,0 +1,68 @@
+name: eid-saeed-mahmoud
+services:
+  accounting:
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile.accounting
+    environment:
+      SECRET_KEY: ${SECRET_KEY:?Set a strong secret in deployment/.env}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Set a strong seed fallback; existing passwords are not changed}
+      DATABASE_URL: sqlite:////data/database.db
+    volumes:
+      - type: bind
+        source: ${ACCOUNTING_DATA_DIR:?Set the existing database directory}
+        target: /data
+        bind:
+          create_host_path: false
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/login', timeout=5)"]
+      interval: 30s
+      timeout: 8s
+      retries: 3
+    networks: [applications]
+  portfolio:
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile.portfolio
+    environment:
+      PUBLIC_ORIGIN: https://${DOMAIN:?Set your existing domain}
+      CONTACT_PHONE: "01000062838"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=5)"]
+      interval: 30s
+      timeout: 8s
+      retries: 3
+    networks: [applications]
+  web:
+    image: nginx:1.28-alpine
+    environment:
+      DOMAIN: ${DOMAIN:?Set your existing domain}
+      NGINX_ENVSUBST_FILTER: DOMAIN
+    ports: ["80:80", "443:443"]
+    volumes:
+      - ./nginx.conf.template:/etc/nginx/templates/default.conf.template:ro
+      - ./routing.conf:/etc/nginx/common/routing.conf:ro
+      - type: bind
+        source: ${TLS_CERT_FILE:?Set the existing certificate file}
+        target: /etc/nginx/certs/fullchain.pem
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${TLS_KEY_FILE:?Set the existing certificate key}
+        target: /etc/nginx/certs/privkey.pem
+        read_only: true
+        bind:
+          create_host_path: false
+    depends_on:
+      accounting:
+        condition: service_healthy
+      portfolio:
+        condition: service_healthy
+    restart: unless-stopped
+    networks: [applications]
+networks:
+  applications:
+    driver: bridge

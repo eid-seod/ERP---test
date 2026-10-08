@@ -1,0 +1,15 @@
+.git
+**/.git
+**/__pycache__
+**/.pytest_cache
+**/.env
+**/.env.*
+**/*.db
+**/*.db-wal
+**/*.db-shm
+**/*.sqlite*
+**/*.pem
+**/*.key
+**/*.bundle
+**/*.zip
+runtime

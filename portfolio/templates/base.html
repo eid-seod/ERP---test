@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% block title %}عيد سعيد محمود | مدير حسابات ومتخصص مالي{% endblock %}</title>
+  <meta name="description" content="{% block description %}الملف المهني لعيد سعيد محمود: خدمات Accounting، الإدارة المالية، ERP Implementation، والمشاريع والحلول العملية لدعم أعمالك.{% endblock %}">
+  <meta name="keywords" content="عيد سعيد محمود, Accounting, Financial Reporting, ERP, Odoo, Zoho Books">
+  <meta name="theme-color" content="#1459c7">
+  <meta property="og:locale" content="ar_EG">
+  <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+  <meta property="og:site_name" content="عيد سعيد محمود">
+  <meta property="og:title" content="{% block og_title %}عيد سعيد محمود — الخبرة المالية والحلول المهنية{% endblock %}">
+  <meta property="og:description" content="خبرة في Accounting والإدارة المالية والأنظمة، وخدمات عملية تساعدك على تنظيم أعمالك.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="عيد سعيد محمود — الملف المهني">
+  <meta name="twitter:description" content="خدمات مالية وأنظمة عملية ومشاريع مهنية لدعم أعمالك.">
+  {% if public_origin %}<link rel="canonical" href="{{ public_origin }}{{ request.path }}"><meta property="og:url" content="{{ public_origin }}{{ request.path }}"><meta property="og:image" content="{{ public_origin }}/portfolio-assets/images/accounting-dashboard.png"><meta name="twitter:image" content="{{ public_origin }}/portfolio-assets/images/accounting-dashboard.png">{% endif %}
+  {% block robots %}{% endblock %}
+  <link rel="icon" type="image/svg+xml" href="/shared-assets/images/personal-monogram.svg">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/portfolio.css') }}">
+  <script defer src="{{ url_for('static', filename='js/portfolio.js') }}"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">انتقل إلى المحتوى</a>
+  <header class="site-header">
+    <a class="wordmark" href="/" aria-label="عيد سعيد محمود — الرئيسية"><span class="monogram">ع س</span><span><strong>عيد سعيد محمود</strong><small dir="ltr">Eid Saeed Mahmoud</small></span></a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">القائمة <span aria-hidden="true">☰</span></button>
+    <nav id="main-nav" class="main-nav" aria-label="القائمة الرئيسية">
+      <a href="/#home">الرئيسية</a><a href="/#about">نبذة عني</a><a href="/#services">الخدمات المهنية</a><a href="/#projects">المشاريع</a><a href="/login">البرنامج المحاسبي</a><a href="/#blog">المدونة</a><a href="/#contact" class="nav-contact">تواصل معي <span aria-hidden="true">↖</span></a>
+    </nav>
+  </header>
+  <main id="main">{% block content %}{% endblock %}</main>
+  <footer class="site-footer section-container"><a class="wordmark" href="/"><span class="monogram">ع س</span><span><strong>عيد سعيد محمود</strong><small>مدير حسابات | متخصص مالي</small></span></a><p>خبرة مالية. أنظمة عملية. حلول تناسب أعمالك.</p><a href="#main">العودة للأعلى <span aria-hidden="true">↑</span></a></footer>
+  <dialog id="screenshot-dialog" class="screenshot-dialog" aria-labelledby="screenshot-caption"><div class="dialog-heading"><p id="screenshot-caption"></p><button type="button" class="dialog-close" aria-label="إغلاق الصورة">إغلاق <span aria-hidden="true">×</span></button></div><img id="screenshot-image" alt=""></dialog>
+</body>
+</html>

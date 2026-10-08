@@ -1,90 +1,45 @@
-# Eid Saeed Mahmoud — Accounting System
+# Eid Saeed Mahmoud — unified portfolio and existing accounting application
 
-A professional solution developed by **Eid Saeed Mahmoud**, supporting his accounting, financial consulting, and business solutions services—not a separate company or independent product brand.
-
-> An Accounting Software Solution Developed as Part of My Professional Experience and Business Solutions Services.
-
-Built with **Flask**, **SQLAlchemy**, **SQLite**, and **vanilla JavaScript**. Personal website integration is pending the existing website source; this repository currently contains the accounting application only.
-
-## Features
-
-- Session-based authentication with Werkzeug password hashing
-- Admin and user roles; admin user management
-- Per-session CSRF protection on all state-changing API routes
-- Migration-safe SQLite schema upgrades for existing installations
-- Detailed invoice items: code, name, description, quantity, unit price, discount, tax, and line total
-- Real-time subtotal, discount, tax, grand total, TDS, and net payable calculations
-- TDS enabled/disabled per invoice, with percentage or fixed-amount configuration
-- Draft/Open invoice editing with full field and item audit trail
-- Locked Approved, Posted, Fully Paid, and Paid invoices; admins have special edit permission
-- Multiple currencies: USD, EUR, GBP, INR, AED, CAD, AUD, and JPY
-- Professional PDF export and browser print action
-- RESTful CRUD APIs for invoices and clients
-- Responsive dashboard and invoice review/edit interface
-- Historical invoices keep their saved currency, rates, discounts, tax, and TDS configuration
-
-## Quick start on Windows
-
-From PowerShell, run these commands in the project folder:
-
-```powershell
-python -m pip install -r requirements.txt
-python app.py
-```
-
-If the app is already installed and only PDF export is failing:
-
-```powershell
-python -m pip install reportlab
-```
-
-ReportLab is loaded only when PDF export is requested, so the application itself can still start without it. The PDF endpoint will return an installation message until ReportLab is installed.
-
-Open `http://localhost:5000`.
-
-Default development admin: `admin@example.com` / `Admin123!`. Set `ADMIN_PASSWORD` and `SECRET_KEY` in production; the initial admin is created from `ADMIN_PASSWORD` on first database initialization.
-
-## Tests
-
-```bash
-pytest -q
-```
-
-## API routes
-
-- `POST /login`, `POST /logout`, `POST /register`, `GET /me`
-- `GET /users`, `POST /users`, `PATCH /users/:id`, `DELETE /users/:id` (admin)
-- `GET /clients`, `POST /clients`, `PATCH /clients/:id`, `DELETE /clients/:id`
-- `GET /invoices`, `POST /invoices`, `GET /invoices/:id`, `PATCH /invoices/:id`, `DELETE /invoices/:id`
-- `GET /invoices/:id/audit` — invoice audit history
-- `GET /invoices/:id/pdf` — professional PDF export
-
-Use the `csrf_token` returned by `/login` or `/me` as the `X-CSRF-Token` header for mutations.
-
-Invoice item payload example:
-
-```json
-{
-  "item_code": "CONS-001",
-  "item_name": "Consulting service",
-  "description": "Monthly advisory services",
-  "quantity": 2,
-  "unit_price": 500,
-  "discount": 25,
-  "tax_rate": 18
-}
-```
-
-Invoice-level TDS fields are `tds_enabled`, `tds_type` (`percent` or `fixed`), and `tds_rate`. New invoices should use `draft` or `open` while being edited. Statuses `approved`, `posted`, `fully_paid`, and `paid` are locked for standard users.
-
-## Structure
+A single portable Git repository for a personal Arabic RTL portfolio and the **unchanged existing accounting application**, ready to configure on the owner's private server. No new product identity, custom domain, database, or hosting environment is created.
 
 ```text
-app.py                 Application factory and page routes
-database.py            SQLAlchemy setup and SQLite schema upgrades
-models/                User, Client, Invoice, InvoiceItem, AuditTrail
-routes/                Auth, client, and invoice blueprints
-templates/             Login, dashboard, and invoice form pages
-static/                Responsive CSS and frontend JavaScript
-tests/                 Flask feature and regression tests
+/
+├── portfolio/             # Arabic public homepage, services, project showcase, blog, contact
+├── accounting-software/   # Original accounting files unchanged; existing SQLite stays private
+├── shared-assets/         # Portfolio's Arabic fonts/license and blue personal monogram
+├── documentation/         # Architecture, deployment, preservation and verification evidence
+└── deployment/            # One Compose environment, Nginx, production WSGI and safety checks
 ```
+
+## Key guarantees
+
+All 22 original tracked accounting files are byte-identical to baseline `551f23d49e75cb296cbf61e7162fc04fe7c730bc`. Its existing database was moved, not recreated. Original Git history is retained, and portfolio history was merged under `portfolio/`. No nested Git repository or submodule. Current accounting branding and UI language are deliberately preserved; Arabic/RTL applies to the public portfolio.
+
+Public URL `/` introduces **عيد سعيد محمود**. The featured software button opens the existing `/login` on the **same origin**. Original routes `/dashboard`, `/invoice/*`, `/invoices`, `/clients`, `/users`, `/me`, `/register`, `/logout`, and `/static/*` remain owned by accounting. Portfolio assets are `/portfolio-assets/*`; shared assets are `/shared-assets/*`. No portfolio database or shared-login rebuild is introduced.
+
+## Deployment
+
+Use **[the deployment guide](documentation/deployment-guide.md)** and **[architecture report](documentation/architecture-report.md)**. Supply your own existing domain, TLS certificate, strong secret and persistent existing SQLite directory in `deployment/.env`, then from this repository root:
+
+```bash
+docker compose --env-file deployment/.env -f deployment/compose.yml config --quiet
+docker compose --env-file deployment/.env -f deployment/compose.yml up -d --build
+```
+
+Only Nginx exposes 80/443. Portfolio and accounting are private services on that one server. The existing SQLite directory is a bind mount; startup refuses to silently create a fresh database. Back up before cutover. Never overwrite a live database with a demonstration database.
+
+## Source and publication status
+
+Retained GitHub repository: `https://github.com/eid-seod/ERP---test`. Authorized access was restored during consolidation; source history is preserved and normal non-force Git updates use this same repository. The portable release and one Git history bundle contain the consolidated tree. The accompanying release verification records the exact final commit and remote check; never create another repository or force-push.
+
+The local combined preview is not the owner's production server. No new production publication or domain provisioning occurred. A prior managed portfolio deployment, if still online, is legacy and outside this self-hosted release; retire it after successful private-server cutover rather than maintaining a second source/deployment.
+
+## Preservation and checks
+
+```bash
+python3 deployment/verify_preservation.py
+(cd portfolio && pytest -q)
+node --check portfolio/static/js/portfolio.js
+```
+
+`--source-only` checks code after legitimate business data changes. The release includes the received demo SQLite file for continuity; it is excluded from Git and Docker images. Original application security risks are documented, not silently patched against the instruction to keep accounting unchanged. Review them before public production use.

@@ -2,87 +2,80 @@
 
 const menuButton = document.querySelector('.menu-toggle');
 const nav = document.querySelector('.main-nav');
-
 function closeMenu() {
   nav.classList.remove('is-open');
   menuButton.setAttribute('aria-expanded', 'false');
 }
-
 menuButton.addEventListener('click', () => {
-  const isOpen = nav.classList.toggle('is-open');
-  menuButton.setAttribute('aria-expanded', String(isOpen));
+  const open = nav.classList.toggle('is-open');
+  menuButton.setAttribute('aria-expanded', String(open));
 });
-
-nav.querySelectorAll('a').forEach(link => {
-  link.addEventListener('click', closeMenu);
-});
-
+nav.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
 document.addEventListener('keydown', event => {
   if (event.key === 'Escape') closeMenu();
 });
-
 if ('IntersectionObserver' in window) {
-  const sectionObserver = new IntersectionObserver(entries => {
+  const observer = new IntersectionObserver(entries => {
     for (const entry of entries) {
       if (!entry.isIntersecting) continue;
-      nav.querySelectorAll('a').forEach(link => {
-        link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
-      });
+      nav.querySelectorAll('a').forEach(link => link.classList.toggle('active', link.getAttribute('href') === '/#' + entry.target.id));
     }
   }, {rootMargin: '-15% 0px -55% 0px', threshold: 0});
-  document.querySelectorAll('main > section[id]').forEach(section => sectionObserver.observe(section));
+  document.querySelectorAll('main > section[id]').forEach(section => observer.observe(section));
 }
 
-const screenshotDialog = document.getElementById('screenshot-dialog');
-const screenshotImage = document.getElementById('screenshot-image');
-const screenshotCaption = document.getElementById('screenshot-caption');
+const dialog = document.getElementById('screenshot-dialog');
 let screenshotTrigger = null;
-
 document.querySelectorAll('[data-image]').forEach(button => {
   button.addEventListener('click', () => {
     screenshotTrigger = button;
-    screenshotImage.src = button.dataset.image;
-    screenshotImage.alt = button.dataset.caption;
-    screenshotCaption.textContent = button.dataset.caption;
-    screenshotDialog.showModal();
+    const image = document.getElementById('screenshot-image');
+    image.src = button.dataset.image;
+    image.alt = button.dataset.caption;
+    document.getElementById('screenshot-caption').textContent = button.dataset.caption;
+    dialog.showModal();
   });
 });
-
-screenshotDialog.querySelector('.dialog-close').addEventListener('click', () => screenshotDialog.close());
-screenshotDialog.addEventListener('click', event => {
-  const rect = screenshotDialog.getBoundingClientRect();
-  if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) screenshotDialog.close();
+dialog.querySelector('.dialog-close').addEventListener('click', () => dialog.close());
+dialog.addEventListener('click', event => {
+  const rect = dialog.getBoundingClientRect();
+  if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close();
 });
-screenshotDialog.addEventListener('close', () => {
+dialog.addEventListener('close', () => {
   if (screenshotTrigger) screenshotTrigger.focus();
 });
 
-const inquiryForm = document.getElementById('inquiry-form');
-const inquiryDraft = document.getElementById('inquiry-draft');
-const inquiryFeedback = document.getElementById('inquiry-feedback');
-
-inquiryForm.addEventListener('submit', event => {
-  event.preventDefault();
-  if (!inquiryForm.reportValidity()) return;
-  const service = document.getElementById('inquiry-service').value;
-  const message = document.getElementById('inquiry-message').value.trim();
-  if (!message) {
-    inquiryFeedback.textContent = 'Please describe the support you need.';
-    return;
+const form = document.getElementById('inquiry-form');
+if (form) {
+  const service = document.getElementById('inquiry-service');
+  const message = document.getElementById('inquiry-message');
+  const draft = document.getElementById('inquiry-draft');
+  const feedback = document.getElementById('inquiry-feedback');
+  function validateField(field, text) {
+    field.setCustomValidity(field.value.trim() ? '' : text);
   }
-  inquiryDraft.value = 'Hello Eid Saeed Mahmoud,\n\nI am interested in ' + service + '.\n\n' + message + '\n\nPlease let me know how we can discuss this further.';
-  document.getElementById('inquiry-result').hidden = false;
-  inquiryFeedback.textContent = 'Your inquiry is ready. Nothing has been sent or stored.';
-  inquiryDraft.focus();
-});
-
-document.getElementById('copy-inquiry').addEventListener('click', async () => {
-  try {
-    await navigator.clipboard.writeText(inquiryDraft.value);
-    inquiryFeedback.textContent = 'Message copied. Contact Eid directly to share it.';
-  } catch (error) {
-    inquiryDraft.focus();
-    inquiryDraft.select();
-    inquiryFeedback.textContent = 'Select and copy the message manually. Nothing has been sent.';
-  }
-});
+  service.addEventListener('change', () => validateField(service, 'يرجى اختيار الخدمة المناسبة.'));
+  message.addEventListener('input', () => validateField(message, 'يرجى توضيح نوع الدعم الذي تحتاجه.'));
+  service.setCustomValidity('يرجى اختيار الخدمة المناسبة.');
+  message.setCustomValidity('يرجى توضيح نوع الدعم الذي تحتاجه.');
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    validateField(service, 'يرجى اختيار الخدمة المناسبة.');
+    validateField(message, 'يرجى توضيح نوع الدعم الذي تحتاجه.');
+    if (!form.reportValidity()) return;
+    draft.value = 'مرحباً أستاذ عيد سعيد محمود،\n\nأرغب في مناقشة خدمة: ' + service.value + '.\n\n' + message.value.trim() + '\n\nيرجى التواصل لمناقشة نطاق الدعم المناسب.';
+    document.getElementById('inquiry-result').hidden = false;
+    feedback.textContent = 'رسالتك جاهزة. لم يتم إرسال أو تخزين أي بيانات.';
+    draft.focus();
+  });
+  document.getElementById('copy-inquiry').addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(draft.value);
+      feedback.textContent = 'تم نسخ الرسالة. تواصل معي مباشرة لمشاركتها.';
+    } catch (error) {
+      draft.focus();
+      draft.select();
+      feedback.textContent = 'يمكنك تحديد الرسالة ونسخها يدوياً. لم يتم إرسال أي بيانات.';
+    }
+  });
+}

@@ -1,0 +1,192 @@
+{
+  "clients": [
+    {
+      "name": "id",
+      "type": "INTEGER"
+    },
+    {
+      "name": "name",
+      "type": "VARCHAR(160)"
+    },
+    {
+      "name": "email",
+      "type": "VARCHAR(255)"
+    },
+    {
+      "name": "phone",
+      "type": "VARCHAR(40)"
+    },
+    {
+      "name": "address",
+      "type": "VARCHAR(500)"
+    },
+    {
+      "name": "created_at",
+      "type": "DATETIME"
+    }
+  ],
+  "users": [
+    {
+      "name": "id",
+      "type": "INTEGER"
+    },
+    {
+      "name": "name",
+      "type": "VARCHAR(120)"
+    },
+    {
+      "name": "email",
+      "type": "VARCHAR(255)"
+    },
+    {
+      "name": "password_hash",
+      "type": "VARCHAR(255)"
+    },
+    {
+      "name": "role",
+      "type": "VARCHAR(20)"
+    },
+    {
+      "name": "is_active",
+      "type": "BOOLEAN"
+    },
+    {
+      "name": "created_at",
+      "type": "DATETIME"
+    }
+  ],
+  "invoices": [
+    {
+      "name": "id",
+      "type": "INTEGER"
+    },
+    {
+      "name": "invoice_number",
+      "type": "VARCHAR(40)"
+    },
+    {
+      "name": "client_id",
+      "type": "INTEGER"
+    },
+    {
+      "name": "user_id",
+      "type": "INTEGER"
+    },
+    {
+      "name": "issue_date",
+      "type": "DATE"
+    },
+    {
+      "name": "due_date",
+      "type": "DATE"
+    },
+    {
+      "name": "status",
+      "type": "VARCHAR(20)"
+    },
+    {
+      "name": "tax_rate",
+      "type": "NUMERIC(5, 2)"
+    },
+    {
+      "name": "notes",
+      "type": "TEXT"
+    },
+    {
+      "name": "created_at",
+      "type": "DATETIME"
+    },
+    {
+      "name": "currency",
+      "type": "VARCHAR(3)"
+    },
+    {
+      "name": "tds_enabled",
+      "type": "BOOLEAN"
+    },
+    {
+      "name": "tds_type",
+      "type": "VARCHAR(10)"
+    },
+    {
+      "name": "tds_rate",
+      "type": "NUMERIC(12, 2)"
+    },
+    {
+      "name": "updated_at",
+      "type": "DATETIME"
+    }
+  ],
+  "invoice_items": [
+    {
+      "name": "id",
+      "type": "INTEGER"
+    },
+    {
+      "name": "invoice_id",
+      "type": "INTEGER"
+    },
+    {
+      "name": "description",
+      "type": "VARCHAR(300)"
+    },
+    {
+      "name": "quantity",
+      "type": "NUMERIC(12, 2)"
+    },
+    {
+      "name": "unit_price",
+      "type": "NUMERIC(12, 2)"
+    },
+    {
+      "name": "item_code",
+      "type": "VARCHAR(80)"
+    },
+    {
+      "name": "item_name",
+      "type": "VARCHAR(200)"
+    },
+    {
+      "name": "discount",
+      "type": "NUMERIC(12, 2)"
+    },
+    {
+      "name": "tax_rate",
+      "type": "NUMERIC(5, 2)"
+    }
+  ],
+  "invoice_audit_trail": [
+    {
+      "name": "id",
+      "type": "INTEGER"
+    },
+    {
+      "name": "invoice_id",
+      "type": "INTEGER"
+    },
+    {
+      "name": "user_id",
+      "type": "INTEGER"
+    },
+    {
+      "name": "action",
+      "type": "VARCHAR(30)"
+    },
+    {
+      "name": "field_name",
+      "type": "VARCHAR(120)"
+    },
+    {
+      "name": "previous_value",
+      "type": "TEXT"
+    },
+    {
+      "name": "new_value",
+      "type": "TEXT"
+    },
+    {
+      "name": "changed_at",
+      "type": "DATETIME"
+    }
+  ]
+}

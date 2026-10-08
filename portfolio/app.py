@@ -1,78 +1,93 @@
-"""Public portfolio only; never imports or modifies the accounting application."""
+"""Public Arabic portfolio only; imports no accounting application modules."""
 import os
+import re
+from pathlib import Path
 from urllib.parse import urlparse
 
-from flask import Flask, jsonify, render_template
+from flask import Flask, abort, jsonify, render_template, send_from_directory, Response
+from markupsafe import Markup, escape
 
-from content import SERVICES, EXPERIENCE, SOFTWARE_FEATURES, SOFTWARE_BENEFITS
+from content import SERVICES, EXPERTISE, SOFTWARE_FEATURES, ARTICLES
 
-DEFAULT_SOFTWARE_URL = "https://5051-ii9x7ilv6lmzhug9n1g1o-684bafc5.sg2.manus.computer/login"
-
-
-def validated_url(value, setting_name):
-    parsed = urlparse(value)
-    if parsed.scheme not in {"http", "https"} or not parsed.hostname or parsed.username or parsed.password:
-        raise ValueError(f"{setting_name} must be an absolute HTTP(S) URL without credentials.")
-    return value
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def create_app(test_config=None):
-    app = Flask(__name__)
-    app.config.update(
-        SOFTWARE_URL=os.getenv("ACCOUNTING_SOFTWARE_URL", DEFAULT_SOFTWARE_URL),
-        PUBLIC_ORIGIN=os.getenv("PUBLIC_ORIGIN", "").rstrip("/"),
-        CONTACT_PHONE=os.getenv("CONTACT_PHONE", "01000062838"),
-        CONTACT_EMAIL=os.getenv("CONTACT_EMAIL", ""),
-        LINKEDIN_URL=os.getenv("LINKEDIN_URL", ""),
-    )
+    app = Flask(__name__, static_url_path='/portfolio-assets')
+    app.config.update(PUBLIC_ORIGIN=os.getenv('PUBLIC_ORIGIN', '').rstrip('/'), CONTACT_PHONE=os.getenv('CONTACT_PHONE', '01000062838'))
     if test_config:
         app.config.update(test_config)
-    validated_url(app.config["SOFTWARE_URL"], "ACCOUNTING_SOFTWARE_URL")
-    if app.config["PUBLIC_ORIGIN"]:
-        validated_url(app.config["PUBLIC_ORIGIN"], "PUBLIC_ORIGIN")
-    if app.config["LINKEDIN_URL"]:
-        validated_url(app.config["LINKEDIN_URL"], "LINKEDIN_URL")
+    if app.config['PUBLIC_ORIGIN']:
+        parsed = urlparse(app.config['PUBLIC_ORIGIN'])
+        if parsed.scheme not in {'http', 'https'} or not parsed.hostname or parsed.username or parsed.password or parsed.path not in {'', '/'}:
+            raise ValueError('PUBLIC_ORIGIN must be the supplied public HTTP(S) origin.')
 
-    @app.get("/")
+    @app.template_filter('terms')
+    def isolate_terms(value):
+        parts = re.split(r'([A-Za-z][A-Za-z0-9]*(?:[ \t&]+[A-Za-z][A-Za-z0-9]*)*)', str(value))
+        return Markup('').join(Markup('<bdi dir="ltr" lang="en">') + escape(part) + Markup('</bdi>') if re.match(r'^[A-Za-z]', part) else escape(part) for part in parts)
+
+    @app.context_processor
+    def context():
+        return {'public_origin': app.config['PUBLIC_ORIGIN'], 'phone': app.config['CONTACT_PHONE'], 'software_url': '/login', 'articles': ARTICLES}
+
+    @app.get('/')
     def home():
-        software_url = app.config["SOFTWARE_URL"]
-        return render_template(
-            "index.html",
-            services=SERVICES,
-            experience=EXPERIENCE,
-            features=SOFTWARE_FEATURES,
-            benefits=SOFTWARE_BENEFITS,
-            software_url=software_url,
-            software_is_preview="manus.computer" in urlparse(software_url).hostname,
-            phone=app.config["CONTACT_PHONE"],
-            email=app.config["CONTACT_EMAIL"],
-            linkedin=app.config["LINKEDIN_URL"],
-            public_origin=app.config["PUBLIC_ORIGIN"],
-        )
+        return render_template('index.html', services=SERVICES, expertise=EXPERTISE, features=SOFTWARE_FEATURES)
 
-    @app.get("/health")
+    @app.get('/blog/<slug>')
+    def article(slug):
+        item = next((item for item in ARTICLES if item['slug'] == slug), None)
+        if item is None:
+            abort(404)
+        return render_template('article.html', article=item)
+
+    @app.get('/shared-assets/<path:filename>')
+    def shared_assets(filename):
+        return send_from_directory(ROOT / 'shared-assets', filename)
+
+    @app.get('/health')
     def health():
-        return jsonify({"status": "ok", "service": "personal-portfolio"})
+        return jsonify({'status': 'ok', 'service': 'portfolio'})
 
-    @app.get("/manus-routes.json")
+    @app.get('/manus-routes.json')
     def route_manifest():
-        return jsonify({"routes": [{"path": "/", "title": "Eid Saeed Mahmoud — Professional Portfolio"}]})
+        routes = [{'path': '/', 'title': 'عيد سعيد محمود — الملف المهني'}]
+        routes += [{'path': '/blog/' + item['slug'], 'title': item['title']} for item in ARTICLES]
+        routes += [{'path': '/login', 'title': 'تسجيل الدخول للنظام المحاسبي'}, {'path': '/dashboard', 'title': 'Dashboard'}, {'path': '/invoice/new', 'title': 'الفاتورة الجديدة'}, {'path': '/invoice/:invoice_id/edit', 'title': 'عرض الفاتورة'}]
+        return jsonify({'routes': routes})
+
+    @app.get('/robots.txt')
+    def robots():
+        lines = ['User-agent: *', 'Disallow: /login', 'Disallow: /dashboard', 'Disallow: /invoice', 'Disallow: /clients', 'Disallow: /users', 'Disallow: /me', 'Disallow: /register']
+        if app.config['PUBLIC_ORIGIN']:
+            lines.append('Sitemap: ' + app.config['PUBLIC_ORIGIN'] + '/sitemap.xml')
+        return Response('\n'.join(lines) + '\n', mimetype='text/plain')
+
+    @app.get('/sitemap.xml')
+    def sitemap():
+        origin = app.config['PUBLIC_ORIGIN']
+        if not origin:
+            return Response('لم يتم إعداد عنوان الموقع العام بعد.\n', status=503, mimetype='text/plain')
+        paths = ['/', *['/blog/' + item['slug'] for item in ARTICLES]]
+        items = ''.join('<url><loc>' + str(escape(origin + path)) + '</loc></url>' for path in paths)
+        return Response('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + items + '</urlset>', mimetype='application/xml')
 
     @app.after_request
     def security_headers(response):
-        response.headers["X-Content-Type-Options"] = "nosniff"
-        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
-        response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+        response.headers['X-Content-Type-Options'] = 'nosniff'
+        response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+        response.headers['Permissions-Policy'] = 'camera=(), microphone=(), geolocation=()'
         return response
 
     @app.errorhandler(404)
     def not_found(error):
-        return render_template("404.html"), 404
+        return render_template('404.html'), 404
 
     return app
 
 
 app = create_app()
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.getenv("PORT", "3000")), debug=False)
+if __name__ == '__main__':
+    app.run(host='127.0.0.1', port=int(os.getenv('PORT', '5052')), debug=False)
