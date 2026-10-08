@@ -53,6 +53,18 @@
     {
       "name": "created_at",
       "type": "DATETIME"
+    },
+    {
+      "name": "deleted_at",
+      "type": "DATETIME"
+    },
+    {
+      "name": "last_login_at",
+      "type": "DATETIME"
+    },
+    {
+      "name": "session_epoch",
+      "type": "INTEGER"
     }
   ],
   "invoices": [
@@ -186,6 +198,62 @@
     },
     {
       "name": "changed_at",
+      "type": "DATETIME"
+    }
+  ],
+  "user_audit_events": [
+    {
+      "name": "id",
+      "type": "INTEGER"
+    },
+    {
+      "name": "actor_id",
+      "type": "INTEGER"
+    },
+    {
+      "name": "target_id",
+      "type": "INTEGER"
+    },
+    {
+      "name": "actor_name",
+      "type": "VARCHAR(120)"
+    },
+    {
+      "name": "actor_email",
+      "type": "VARCHAR(255)"
+    },
+    {
+      "name": "action",
+      "type": "VARCHAR(80)"
+    },
+    {
+      "name": "before_data",
+      "type": "TEXT"
+    },
+    {
+      "name": "after_data",
+      "type": "TEXT"
+    },
+    {
+      "name": "changed_at",
+      "type": "DATETIME"
+    },
+    {
+      "name": "ip_address",
+      "type": "VARCHAR(64)"
+    }
+  ],
+  "platform_settings": [
+    {
+      "name": "key",
+      "type": "VARCHAR(80)"
+    },
+    {
+      "name": "value",
+      "type": "BOOLEAN"
+    },
+    {
+      "name": "updated_at",
       "type": "DATETIME"
     }
   ]

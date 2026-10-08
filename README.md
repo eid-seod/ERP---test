@@ -1,11 +1,11 @@
 # Eid Saeed Mahmoud — Arabic portfolio + existing accounting application
 
-**Canonical repository: https://github.com/eid-seod/ERP---test — branch `main`.** One repository, one private-server deployment configuration, one public domain. The Arabic RTL blue-and-white portfolio is the public homepage; the original accounting app is one featured professional solution and is not copied, rebuilt, renamed or edited.
+**Canonical repository: https://github.com/eid-seod/ERP---test — branch `main`.** One repository, one private-server deployment configuration, one public domain. The Arabic RTL blue-and-white portfolio is the public homepage; the existing accounting app is one featured professional solution, not copied, rebuilt or renamed. The authorized **Step 1 Super Admin** extension changes only user administration/authentication metadata and native navigation; invoice/client business logic and existing branding/styles remain unchanged.
 
 ```text
 /
 ├── portfolio/             # Arabic homepage, services, projects, blog, contact
-├── accounting-software/   # Original accounting source, authentication and routes unchanged
+├── accounting-software/   # Existing accounting + scoped Super Admin user administration
 ├── shared-assets/         # Self-hosted Arabic fonts/license and personal monogram
 ├── documentation/         # Architecture, deployment and preservation evidence
 └── deployment/            # Local launcher + one production Compose/Nginx configuration
@@ -48,6 +48,7 @@ Open this **root folder** in VS Code using **File → Open Folder → ERP---test
 ### Option A — use your EXISTING compatible database (recommended for existing users)
 
 Replace the quoted path with the real file you already use; leave it where it is:
+**For an existing pre-Super-Admin database, first stop writers, back up outside Git and run the explicit additive migration in [Step 1 instructions](documentation/super-admin-step1.md).** The launcher refuses an unmigrated file; it does not silently upgrade it.
 
 ```powershell
 .\.venv\Scripts\python.exe deployment\run_local.py --database "C:\Users\Eid - PC\Documents\ERP - test\database.db"
@@ -95,7 +96,7 @@ Linux/macOS equivalent after creating/installing a virtualenv:
 | Local same-origin routing | `deployment/run_local.py`; forwards original paths without stripping or rewriting them |
 | Production same-origin routing | `deployment/routing.conf`; `/` goes to portfolio, original `/login`, `/dashboard`, `/invoice/*`, APIs and `/static/*` go to accounting |
 
-Accounting remains source-identical to baseline `551f23d49e75cb296cbf61e7162fc04fe7c730bc`, including current branding/language, models, roles and workflows. Public phone is the supplied `01000062838`. Inquiry preparation sends/stores nothing; no other personal details or country code are invented.
+The historical accounting manifest is retained at baseline `551f23d49e75cb296cbf61e7162fc04fe7c730bc`. Step 1 has an explicit authorized source-change overlay and tagged pre-change baseline; it is not falsely described as whole-app source-identical. Invoice/client business logic, existing accounting CSS/JS/login, branding and portfolio are unchanged. Public phone is the supplied `01000062838`. Inquiry preparation sends/stores nothing; no other personal details or country code are invented.
 
 ## 4. Private-server production deployment
 
@@ -124,3 +125,7 @@ The first command should return no files. Source verification (no database neede
 ```
 
 Module tests run in separate processes to avoid `app.py` import-name collisions; existing-data tests require the received compatible database. See `deployment/run_checks.py` and the deployment documentation.
+
+## 6. Step 1 — Super Admin only
+
+See [migration, bootstrap and Windows instructions](documentation/super-admin-step1.md) and [exact existing-file edit ledger](PROGRESS.md). `/super-admin` manages users, roles, user audit and one registration flag; no financial queries, company/tenancy modules or new dependencies. Public registration defaults **OFF**; the original login remains unchanged. The first Super Admin is created interactively with `python -m flask --app accounting-software/app.py create-super-admin` after selecting the existing migrated database and runtime environment. No default Super Admin password exists. Lockout/unlock and mandatory-password-change controls are unsupported and deliberately omitted.

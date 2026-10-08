@@ -1,0 +1,6 @@
+{% extends 'super_admin/base.html' %}
+{% block sa_heading %}إعدادات المنصة{% endblock %}
+{% block sa_content %}
+<section class="panel"><div class="panel-heading"><h2>التسجيل العام</h2><span class="status {{ 'status-paid' if enabled else 'status-draft' }}">{{ 'مفعّل' if enabled else 'متوقف' }}</span></div>
+<form method="post" class="sa-form"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><label>السماح بالتسجيل العام<select name="enabled"><option value="0" {% if not enabled %}selected{% endif %}>متوقف — OFF</option><option value="1" {% if enabled %}selected{% endif %}>مفعّل — ON</option></select></label><p class="muted">الافتراضي OFF. عند الإيقاف تُرجع /register الحالة 404. الحسابات الحالية وتسجيل الدخول لا تتأثر. كل تغيير يسجل في سجل التدقيق.</p><button class="button primary" type="submit">حفظ الإعداد</button></form></section>
+{% endblock %}

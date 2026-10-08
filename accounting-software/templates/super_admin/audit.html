@@ -1,0 +1,10 @@
+{% extends 'super_admin/base.html' %}
+{% from 'super_admin/components.html' import pager, audit_table with context %}
+{% block sa_heading %}سجل التدقيق{% endblock %}
+{% block sa_content %}
+<section class="panel">
+<form method="get" class="sa-filters"><label>المنفّذ<select name="actor"><option value="">كل المستخدمين</option>{% for actor in actors %}<option value="{{ actor.id }}" {% if request.args.get('actor') == actor.id|string %}selected{% endif %}>{{ actor.name }}</option>{% endfor %}</select></label><label>الإجراء<select name="action"><option value="">كل الإجراءات</option>{% for action in actions %}<option value="{{ action }}" {% if request.args.get('action') == action %}selected{% endif %}>{{ action }}</option>{% endfor %}</select></label><label>من تاريخ UTC<input name="from" type="date" value="{{ request.args.get('from','') }}"></label><label>إلى تاريخ UTC<input name="to" type="date" value="{{ request.args.get('to','') }}"></label><button class="button secondary" type="submit">تطبيق</button></form>
+<p class="muted sa-note">يتضمن المستخدم والإجراء والقيم العامة قبل/بعد والوقت وIP عند توفره؛ لا تُسجل كلمات المرور أو hashes أو البيانات المالية.</p>
+{{ audit_table(events) }}{{ pager(pagination) }}
+</section>
+{% endblock %}

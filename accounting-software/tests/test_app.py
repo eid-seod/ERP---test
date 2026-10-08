@@ -6,6 +6,12 @@ from app import create_app
 @pytest.fixture()
 def client(tmp_path):
     app = create_app({"TESTING": True, "SECRET_KEY": "test-secret", "DATABASE_URL": f"sqlite:///{tmp_path / 'test.db'}"})
+    # These existing regressions exercise registration explicitly; production defaults remain OFF.
+    from database import get_session
+    from super_admin.models import PlatformSetting
+    with get_session() as db:
+        db.add(PlatformSetting(key='public_registration_enabled', value=True))
+        db.commit()
     with app.test_client() as client:
         yield client
 

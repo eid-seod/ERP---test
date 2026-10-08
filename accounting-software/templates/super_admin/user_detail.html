@@ -1,0 +1,22 @@
+{% extends 'super_admin/base.html' %}
+{% from 'super_admin/components.html' import status, pager, audit_table with context %}
+{% block sa_heading %}تفاصيل المستخدم{% endblock %}
+{% block sa_content %}
+<section class="panel"><div class="panel-heading"><h2>{{ user.name }}</h2>{{ status(user) }}</div>
+<dl class="sa-profile"><div><dt>البريد</dt><dd><bdi>{{ user.email }}</bdi></dd></div><div><dt>الدور</dt><dd><bdi>{{ user.role }}</bdi></dd></div><div><dt>تاريخ الإنشاء UTC</dt><dd><bdi>{{ user.created_at or '—' }}</bdi></dd></div><div><dt>آخر دخول UTC</dt><dd><bdi>{{ user.last_login_at or '—' }}</bdi></dd></div></dl>
+<div class="action-row">
+{% if user.deleted_at %}
+<form method="post" action="/super-admin/users/{{ user.id }}/restore"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="button secondary" type="submit">استعادة الحساب غير مفعّل</button></form>
+{% else %}
+<a class="button secondary" href="/super-admin/users/{{ user.id }}/edit">تعديل البيانات والدور</a>
+<form method="post" action="/super-admin/users/{{ user.id }}/status" class="sa-confirm"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><input type="hidden" name="action" value="{{ 'deactivate' if user.is_active else 'activate' }}"><button class="button secondary" type="submit" {% if user.id == super_identity.id and user.is_active %}disabled{% endif %}>{{ 'تعطيل الحساب' if user.is_active else 'تفعيل الحساب' }}</button></form>
+<form method="post" action="/super-admin/users/{{ user.id }}/delete" class="sa-confirm"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="button secondary danger-text" type="submit" {% if user.id == super_identity.id %}disabled{% endif %}>حذف مؤقت فقط</button></form>
+{% endif %}
+</div>
+{% if user.id == super_identity.id %}<p class="muted sa-note">لا يمكنك تعطيل أو حذف أو خفض دور حسابك. وتُحمى صلاحيات آخر Super Admin مفعّل على الخادم.</p>{% endif %}
+</section>
+{% if not user.deleted_at %}
+<section class="panel"><h2>إعادة تعيين كلمة المرور</h2><form method="post" action="/super-admin/users/{{ user.id }}/password" class="sa-form sa-confirm"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><label>كلمة مرور مؤقتة جديدة<input name="password" type="password" minlength="8" dir="ltr" autocomplete="new-password" placeholder="اتركها فارغة لتوليدها"></label><p class="muted">تُرفض الجلسات القديمة عند الطلب التالي. لا يوجد تدفق لتغيير إلزامي عند أول دخول، ولا توجد آلية lockout أو إجراء unlock.</p><button class="button primary" type="submit">إعادة التعيين</button></form></section>
+{% endif %}
+<section class="panel"><div class="panel-heading"><h2>سجل الإجراءات على هذا المستخدم</h2></div>{{ audit_table(events) }}{{ pager(pagination) }}</section>
+{% endblock %}

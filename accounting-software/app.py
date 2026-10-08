@@ -11,6 +11,7 @@ from models.user import User
 from routes.auth import bp as auth_bp
 from routes.clients import bp as clients_bp
 from routes.invoices import bp as invoices_bp
+from super_admin import init_super_admin, require_existing_upgrade
 
 
 def create_app(test_config=None):
@@ -21,7 +22,10 @@ def create_app(test_config=None):
         TOKEN_FACTORY=secrets.token_urlsafe,
     )
     if test_config: app.config.update(test_config)
-    configure_database(app.config["DATABASE_URL"]); init_db()
+    engine = configure_database(app.config["DATABASE_URL"])
+    require_existing_upgrade(engine)
+    init_db()
+    init_super_admin(app)
 
     @app.context_processor
     def personal_brand():

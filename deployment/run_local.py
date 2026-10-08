@@ -11,7 +11,7 @@ from werkzeug.serving import run_simple
 from accounting_entrypoint import preflight
 
 ROOT = Path(__file__).resolve().parents[1]
-ACCOUNTING_PREFIXES = frozenset({'login', 'logout', 'register', 'me', 'users', 'clients', 'invoices', 'invoice', 'dashboard', 'static'})
+ACCOUNTING_PREFIXES = frozenset({'login', 'logout', 'register', 'me', 'users', 'clients', 'invoices', 'invoice', 'dashboard', 'static', 'super-admin'})
 
 
 class SameOriginApplications:

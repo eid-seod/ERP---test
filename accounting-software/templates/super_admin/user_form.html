@@ -1,0 +1,13 @@
+{% extends 'super_admin/base.html' %}
+{% block sa_heading %}{{ 'تعديل المستخدم' if user else 'إضافة مستخدم' }}{% endblock %}
+{% block sa_content %}
+<section class="panel">
+<form method="post" action="{{ '/super-admin/users/' ~ user.id ~ '/edit' if user else '/super-admin/users/new' }}" class="sa-form">
+<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+<div class="form-grid"><label>الاسم<input name="name" maxlength="120" value="{{ user.name if user else '' }}" required></label><label>البريد الإلكتروني<input name="email" type="email" maxlength="255" dir="ltr" value="{{ user.email if user else '' }}" required></label></div>
+<label>الدور<select name="role">{% for role in roles %}<option value="{{ role }}" {% if (user and user.role == role) or (not user and role == 'user') %}selected{% endif %}>{{ role }}</option>{% endfor %}</select></label>
+{% if not user %}<label>كلمة مرور مؤقتة<input name="password" type="password" minlength="8" autocomplete="new-password" dir="ltr" placeholder="اتركها فارغة لتوليد كلمة مرور"></label><p class="muted">الحد الأدنى 8 أحرف. كلمة المرور المولّدة تظهر في الاستجابة التالية فقط؛ احتفظ بها بأمان.</p>{% endif %}
+<p class="muted">التطبيق الحالي لا يدعم فرض تغيير كلمة المرور عند أول دخول؛ لم تتم إضافة تدفق Authentication جديد.</p>
+<div class="action-row"><a class="button secondary" href="/super-admin/users">إلغاء</a><button class="button primary" type="submit">حفظ المستخدم</button></div>
+</form></section>
+{% endblock %}

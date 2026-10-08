@@ -1,0 +1,16 @@
+{% macro status(user) %}
+{% if user.deleted_at %}<span class="status status-overdue">محذوف مؤقتًا</span>{% elif user.is_active %}<span class="status status-paid">مفعّل</span>{% else %}<span class="status status-draft">غير مفعّل</span>{% endif %}
+{% endmacro %}
+{% macro pager(pagination) %}
+<nav class="sa-pagination" aria-label="صفحات النتائج">
+{% if pagination.page > 1 %}<a class="button secondary" href="{{ page_url(pagination.page - 1) }}">السابق</a>{% endif %}
+<span class="muted">الصفحة {{ pagination.page }} / {{ pagination.pages }} — {{ pagination.total }} نتيجة</span>
+{% if pagination.page < pagination.pages %}<a class="button secondary" href="{{ page_url(pagination.page + 1) }}">التالي</a>{% endif %}
+</nav>
+{% endmacro %}
+{% macro audit_table(events) %}
+<div class="table-wrap"><table><thead><tr><th>الوقت UTC</th><th>المستخدم المنفّذ</th><th>الإجراء</th><th>المستخدم المستهدف</th><th>قبل / بعد</th><th>IP</th></tr></thead><tbody>
+{% for event in events %}<tr><td><bdi>{{ event.timestamp }}</bdi></td><td>{{ event.actor_name }}<small class="table-sub"><bdi>{{ event.actor_email }}</bdi></small></td><td><bdi>{{ event.action }}</bdi></td><td>{{ event.target_id if event.target_id is not none else '—' }}</td><td><details><summary>عرض التغيير</summary><pre dir="ltr">{{ event.before | tojson(indent=2) }}</pre><pre dir="ltr">{{ event.after | tojson(indent=2) }}</pre></details></td><td><bdi>{{ event.ip_address or '—' }}</bdi></td></tr>
+{% else %}<tr><td colspan="6" class="empty">لا توجد أحداث مطابقة.</td></tr>{% endfor %}
+</tbody></table></div>
+{% endmacro %}

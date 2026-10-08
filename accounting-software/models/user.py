@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from sqlalchemy import Boolean, DateTime, Integer, String
+from sqlalchemy import Boolean, DateTime, Index, Integer, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -17,6 +17,9 @@ class User(Base):
     role: Mapped[str] = mapped_column(String(20), default="user", nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+    deleted_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    last_login_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    session_epoch: Mapped[int] = mapped_column(Integer, default=0, server_default="0", nullable=False)
 
     invoices = relationship("Invoice", back_populates="user")
 
@@ -28,3 +31,6 @@ class User(Base):
 
     def to_dict(self):
         return {"id": self.id, "name": self.name, "email": self.email, "role": self.role, "is_active": self.is_active}
+
+
+Index('ux_users_email_normalized', func.lower(User.email), unique=True)

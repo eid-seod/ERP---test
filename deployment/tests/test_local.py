@@ -19,7 +19,7 @@ def test_public_routes_go_to_portfolio(path):
     assert client.get(path).text == 'portfolio:' + path
 
 
-@pytest.mark.parametrize('path', ['/login', '/dashboard', '/invoices/7/pdf', '/invoice/7/edit', '/clients', '/users', '/static/js/app.js'])
+@pytest.mark.parametrize('path', ['/login', '/dashboard', '/invoices/7/pdf', '/invoice/7/edit', '/clients', '/users', '/static/js/app.js', '/super-admin', '/super-admin/users', '/super-admin/audit', '/super-admin/settings'])
 def test_original_accounting_paths_are_not_rewritten(path):
     client = Client(SameOriginApplications(endpoint('portfolio'), endpoint('accounting')), Response)
     assert client.get(path).text == 'accounting:' + path

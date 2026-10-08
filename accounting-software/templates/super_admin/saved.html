@@ -1,0 +1,7 @@
+{% extends 'super_admin/base.html' %}
+{% block sa_heading %}تم حفظ المستخدم{% endblock %}
+{% block sa_content %}
+<section class="panel"><h2>{{ user.name }}</h2><p class="muted"><bdi>{{ user.email }}</bdi> — <bdi>{{ user.role }}</bdi></p>
+{% if temporary_password %}<p class="sa-note">كلمة المرور المؤقتة أدناه تظهر في هذه الاستجابة فقط. احتفظ بها بأمان؛ لن تعرضها صفحة الملف أو سجل التدقيق.</p><code class="sa-secret" dir="ltr">{{ temporary_password }}</code>{% endif %}
+<div class="action-row"><a class="button primary" href="/super-admin/users/{{ user.id }}">فتح ملف المستخدم</a><a class="button secondary" href="/super-admin/users">قائمة المستخدمين</a></div></section>
+{% endblock %}

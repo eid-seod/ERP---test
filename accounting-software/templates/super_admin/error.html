@@ -1,0 +1,3 @@
+{% extends 'super_admin/base.html' %}
+{% block sa_heading %}تعذّر تنفيذ الإجراء{% endblock %}
+{% block sa_content %}<section class="panel"><p class="error" role="alert">{{ message }}</p><p class="muted sa-note">راجع البيانات والصلاحيات ثم أعد المحاولة. لم يُحفظ تغيير غير مسموح.</p><a class="button secondary" href="/super-admin/users">العودة للمستخدمين</a></section>{% endblock %}

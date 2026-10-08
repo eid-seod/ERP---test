@@ -1,0 +1,29 @@
+{
+  "scope": "Authorized Step 1 Super Admin only",
+  "baseline_tag": "baseline-before-super-admin",
+  "baseline_commit": "6520a315bae99bf9b6a49a08341ff5be70c73828",
+  "approved_existing_accounting_files": {
+    "app.py": {
+      "sha256": "7369057d705ae6f2f96eb5c7ebb90f7daf8dbf22537b5169eabad546bfacaf42",
+      "reason": "Register user-only blueprint, metadata migration and existing-session validity checks."
+    },
+    "models/user.py": {
+      "sha256": "47d8ebbda311c157ef64eab6b836facc8eb6eeb188a56f9577c10a6b96a2b7d0",
+      "reason": "Three additive user metadata columns; existing active flag/password methods retained."
+    },
+    "routes/auth.py": {
+      "sha256": "a411a7b08b51c95a5c7ac0c518b5e97e3845b837204b9291c80364e2e76e132d",
+      "reason": "Login audit/session epoch, default-OFF registration, deleted-user hiding and Super Admin protection."
+    },
+    "templates/dashboard.html": {
+      "sha256": "20eb036d8377ab185e01b9acf817dcdf1db00294b22919943831feb4afe5f87c",
+      "reason": "Inert native layout blocks and role-only Super Admin link; default accounting components retained."
+    },
+    "tests/test_app.py": {
+      "sha256": "f826de59505f09df45035158ddb1c225ce2224f8056f0efa3a3e25a2dc6952bc",
+      "reason": "Explicit registration opt-in for existing registration-dependent regression fixture; all assertions retained."
+    }
+  },
+  "original_manifest_retained": true,
+  "received_database_migrated_in_place": false
+}

@@ -1,0 +1,21 @@
+{% extends 'dashboard.html' %}
+{% block html_attributes %}lang="ar" dir="rtl"{% endblock %}
+{% block body_attributes %}class="sa-area"{% endblock %}
+{% block title %}Super Admin — {{ personal_name }}{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/super_admin.css') }}">{% endblock %}
+{% block navigation %}
+<a href="/super-admin" {% if request.endpoint == 'super_admin.dashboard' %}class="active"{% endif %}>لوحة Super Admin</a>
+<a href="/super-admin/users" {% if 'user' in request.endpoint or 'create' in request.endpoint %}class="active"{% endif %}>إدارة المستخدمين</a>
+<a href="/super-admin/audit" {% if request.endpoint == 'super_admin.audit_log' %}class="active"{% endif %}>سجل التدقيق</a>
+<a href="/super-admin/settings" {% if request.endpoint == 'super_admin.settings' %}class="active"{% endif %}>إعدادات المنصة</a>
+<a href="/dashboard">العودة للنظام المحاسبي</a>
+{% endblock %}
+{% block heading %}
+<div><p class="eyebrow">Super Admin / {{ personal_name }}</p><h1>{% block sa_heading %}إدارة المنصة{% endblock %}</h1></div>
+<span class="muted">{{ super_identity.name }}</span>
+{% endblock %}
+{% block main_content %}
+{% for category, message in get_flashed_messages(with_categories=true) %}<p class="flash">{{ message }}</p>{% endfor %}
+{% block sa_content %}{% endblock %}
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/super_admin.js') }}" data-csrf="{{ csrf_token }}" defer></script>{% endblock %}

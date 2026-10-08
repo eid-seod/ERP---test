@@ -1,3 +1,4 @@
+import importlib.util
 import sqlite3
 from pathlib import Path
 
@@ -10,10 +11,17 @@ DATABASE = ROOT / 'accounting-software/database.db'
 
 
 @pytest.fixture()
-def configured(monkeypatch):
+def configured(monkeypatch, tmp_path):
+    path = tmp_path / 'compatible-step1.db'
+    with sqlite3.connect(DATABASE.as_uri() + '?mode=ro', uri=True) as source, sqlite3.connect(path) as target:
+        source.backup(target)
+    spec = importlib.util.spec_from_file_location('step1_migration_fixture', ROOT / 'accounting-software/migrations/super_admin.py')
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.migrate_file(path)
     monkeypatch.setenv('SECRET_KEY', 'test-only-long-secret-key-at-least-thirty-two-characters')
     monkeypatch.setenv('ADMIN_PASSWORD', 'test-only-strong-fallback-password')
-    monkeypatch.setenv('DATABASE_URL', 'sqlite:///' + str(DATABASE))
+    monkeypatch.setenv('DATABASE_URL', 'sqlite:///' + str(path))
 
 
 def test_received_database_passes_read_only_preflight(configured):

@@ -1,0 +1,16 @@
+{% extends 'super_admin/base.html' %}
+{% from 'super_admin/components.html' import audit_table %}
+{% block sa_heading %}لوحة Super Admin{% endblock %}
+{% block sa_content %}
+<section class="metrics">
+<article><span class="metric-label">إجمالي المستخدمين</span><strong>{{ counts.total }}</strong><small>باستثناء المحذوفين مؤقتًا</small></article>
+<article><span class="metric-label">المستخدمون المفعّلون</span><strong>{{ counts.active }}</strong><small>حسابات متاحة للدخول</small></article>
+<article><span class="metric-label">غير المفعّلين</span><strong>{{ counts.inactive }}</strong><small>لا يمكنهم تسجيل الدخول</small></article>
+<article><span class="metric-label">الحسابات المقفلة</span><strong>{{ counts.locked }}</strong><small>غير متاح: لا توجد آلية lockout في التطبيق الحالي.</small></article>
+<article><span class="metric-label">تسجيلات الدخول خلال 7 أيام</span><strong>{{ counts.logins_7_days }}</strong><small>عمليات الدخول الناجحة المسجلة</small></article>
+<article><span class="metric-label">معلومات النظام</span><strong class="sa-version"><bdi>{{ system.version }}</bdi></strong><small>البيئة: <bdi>{{ system.environment }}</bdi></small></article>
+</section>
+<section class="panel"><div class="panel-heading"><h2>المستخدمون حسب الدور</h2><a class="text-button" href="/super-admin/users">إدارة المستخدمين</a></div><div class="sa-role-counts">{% for role in roles %}<span><bdi>{{ role }}</bdi>: <strong>{{ counts.by_role.get(role, 0) }}</strong></span>{% endfor %}</div></section>
+<section class="panel"><div class="panel-heading"><h2>آخر 10 أحداث تدقيق</h2><a class="text-button" href="/super-admin/audit">كل الأحداث</a></div>{{ audit_table(events) }}</section>
+<p class="muted sa-note">هذه المساحة مخصصة للمستخدمين والصلاحيات والإعدادات فقط؛ لا تعرض أو تقرأ بيانات الفواتير أو العملاء أو البيانات المالية.</p>
+{% endblock %}

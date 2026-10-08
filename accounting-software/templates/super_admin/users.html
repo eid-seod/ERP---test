@@ -1,0 +1,21 @@
+{% extends 'super_admin/base.html' %}
+{% from 'super_admin/components.html' import status, pager with context %}
+{% block sa_heading %}إدارة المستخدمين{% endblock %}
+{% block sa_content %}
+<section class="panel">
+<div class="panel-heading"><h2>المستخدمون</h2><a class="button primary" href="/super-admin/users/new">+ إضافة مستخدم</a></div>
+<form method="get" class="sa-filters">
+<label>بحث بالاسم أو البريد<input name="q" value="{{ request.args.get('q', '') }}"></label>
+<label>الدور<select name="role"><option value="">كل الأدوار</option>{% for role in roles %}<option value="{{ role }}" {% if request.args.get('role') == role %}selected{% endif %}>{{ role }}</option>{% endfor %}</select></label>
+<label>الحالة<select name="status">{% for value, label in [('', 'كل الحالات غير المحذوفة'), ('active', 'مفعّل'), ('inactive', 'غير مفعّل'), ('deleted', 'محذوف مؤقتًا')] %}<option value="{{ value }}" {% if request.args.get('status', '') == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></label>
+<label>الترتيب<select name="sort">{% for value, label in [('name','الاسم'),('email','البريد'),('role','الدور'),('created_at','تاريخ الإنشاء'),('last_login_at','آخر دخول')] %}<option value="{{ value }}" {% if request.args.get('sort', 'name') == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></label>
+<label>الاتجاه<select name="direction"><option value="asc">تصاعدي</option><option value="desc" {% if request.args.get('direction') == 'desc' %}selected{% endif %}>تنازلي</option></select></label>
+<label>النتائج في الصفحة<select name="per_page">{% for size in [10,20,50,100] %}<option value="{{ size }}" {% if request.args.get('per_page','20') == size|string %}selected{% endif %}>{{ size }}</option>{% endfor %}</select></label>
+<label class="sa-checkbox"><input type="checkbox" name="include_deleted" value="1" {% if request.args.get('include_deleted') == '1' %}checked{% endif %}>إظهار المحذوفين مؤقتًا</label>
+<button class="button secondary" type="submit">تطبيق</button>
+</form>
+<div class="table-wrap"><table><thead><tr><th>الاسم</th><th>البريد</th><th>الدور</th><th>الحالة</th><th>آخر دخول</th><th></th></tr></thead><tbody>
+{% for user in users %}<tr><td>{{ user.name }}</td><td><bdi>{{ user.email }}</bdi></td><td><bdi>{{ user.role }}</bdi></td><td>{{ status(user) }}</td><td><bdi>{{ user.last_login_at or '—' }}</bdi></td><td><a class="text-button" href="/super-admin/users/{{ user.id }}">التفاصيل</a></td></tr>{% else %}<tr><td colspan="6" class="empty">لا توجد نتائج.</td></tr>{% endfor %}
+</tbody></table></div>{{ pager(pagination) }}
+</section>
+{% endblock %}
