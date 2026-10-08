@@ -114,3 +114,20 @@ def test_existing_database_missing_updated_at_is_upgraded(tmp_path):
         with sqlite3.connect(path) as connection:
             created_at, updated_at = connection.execute('SELECT created_at, updated_at FROM invoices').fetchone()
             assert updated_at == created_at
+
+
+def test_accounting_pages_use_personal_brand(client):
+    response = client.get('/login')
+    assert response.status_code == 200
+    login_html = response.get_data(as_text=True)
+    assert 'Eid Saeed Mahmoud' in login_html
+    assert 'Open Accounting System' in login_html
+    assert 'Professional Experience and Business Solutions Services' in login_html
+    assert 'ledgerly' not in login_html.lower()
+    login(client)
+    for path in ['/dashboard', '/invoice/new']:
+        response = client.get(path)
+        assert response.status_code == 200
+        html = response.get_data(as_text=True)
+        assert 'Eid Saeed Mahmoud' in html
+        assert 'ledgerly' not in html.lower()

@@ -1,1 +1,53 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ledgerly — Dashboard</title><link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}"></head><body><div class="app-shell"><aside class="sidebar"><a class="logo" href="/dashboard"><span class="brand-mark small">L</span><span>ledgerly</span></a><nav><a class="active" href="/dashboard">Overview</a><a href="#invoices">Invoices</a><a href="#clients">Clients</a><a id="users-link" href="#users" hidden>Team</a></nav><button id="logout" class="logout">Sign out</button></aside><main class="content"><header class="topbar"><div><p class="eyebrow">Workspace</p><h1>Good morning, <span id="user-name">there</span></h1></div><a href="/invoice/new" class="button primary">+ New invoice</a></header><div id="flash" class="flash" hidden></div><section class="metrics"><article><span class="metric-label">Outstanding</span><strong id="outstanding">$0.00</strong><small>Across unpaid invoices</small></article><article><span class="metric-label">Collected</span><strong id="collected">$0.00</strong><small>Paid invoices</small></article><article><span class="metric-label">Clients</span><strong id="client-count">0</strong><small>Active relationships</small></article></section><section class="grid-layout"><article class="panel wide" id="invoices"><div class="panel-heading"><div><p class="eyebrow">Recent activity</p><h2>Invoices</h2></div><button class="text-button" onclick="loadDashboard()">Refresh ↻</button></div><div class="table-wrap"><table><thead><tr><th>Invoice</th><th>Client</th><th>Due</th><th>Status</th><th class="align-right">Total</th><th></th></tr></thead><tbody id="invoice-rows"><tr><td colspan="6" class="empty">Loading invoices…</td></tr></tbody></table></div></article><article class="panel" id="clients"><div class="panel-heading"><div><p class="eyebrow">Relationships</p><h2>Clients</h2></div><button class="text-button" onclick="openClientModal()">+ Add</button></div><div id="client-list" class="client-list"></div></article></section><section class="panel" id="users" hidden><div class="panel-heading"><div><p class="eyebrow">Administration</p><h2>Team members</h2></div><button class="text-button" onclick="openUserModal()">+ Add user</button></div><div class="table-wrap"><table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th></th></tr></thead><tbody id="user-rows"></tbody></table></div></section></main></div><div id="modal-root"></div><script src="{{ url_for('static', filename='js/app.js') }}"></script><script>document.addEventListener('DOMContentLoaded', loadDashboard);</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{{ personal_name }} — {{ solution_name }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="logo" href="/dashboard"><span class="brand-mark small" aria-hidden="true">ES</span><span style="font-size:14px">{{ personal_name }}</span></a>
+      <p class="eyebrow" style="color:#c9d1e2;padding:0 12px 18px">{{ solution_name }}</p>
+      <nav aria-label="Accounting navigation">
+        <a class="active" href="/dashboard">Overview</a>
+        <a href="#invoices">Invoices</a>
+        <a href="#clients">Clients</a>
+        <a id="users-link" href="#users" hidden>Team</a>
+      </nav>
+      <button id="logout" class="logout">Sign out</button>
+    </aside>
+    <main class="content">
+      <header class="topbar">
+        <div><p class="eyebrow">{{ personal_name }} / {{ solution_name }}</p><h1>Good morning, <span id="user-name">there</span></h1></div>
+        <a href="/invoice/new" class="button primary">+ New invoice</a>
+      </header>
+      <div id="flash" class="flash" hidden></div>
+      <section class="metrics">
+        <article><span class="metric-label">Outstanding</span><strong id="outstanding">$0.00</strong><small>Across unpaid invoices</small></article>
+        <article><span class="metric-label">Collected</span><strong id="collected">$0.00</strong><small>Paid invoices</small></article>
+        <article><span class="metric-label">Clients</span><strong id="client-count">0</strong><small>Active relationships</small></article>
+      </section>
+      <section class="grid-layout">
+        <article class="panel wide" id="invoices">
+          <div class="panel-heading"><div><p class="eyebrow">Recent activity</p><h2>Invoices</h2></div><button class="text-button" onclick="loadDashboard()">Refresh ↻</button></div>
+          <div class="table-wrap"><table><thead><tr><th>Invoice</th><th>Client</th><th>Due</th><th>Status</th><th class="align-right">Total</th><th></th></tr></thead><tbody id="invoice-rows"><tr><td colspan="6" class="empty">Loading invoices…</td></tr></tbody></table></div>
+        </article>
+        <article class="panel" id="clients">
+          <div class="panel-heading"><div><p class="eyebrow">Relationships</p><h2>Clients</h2></div><button class="text-button" onclick="openClientModal()">+ Add</button></div>
+          <div id="client-list" class="client-list"></div>
+        </article>
+      </section>
+      <section class="panel" id="users" hidden>
+        <div class="panel-heading"><div><p class="eyebrow">Administration</p><h2>Team members</h2></div><button class="text-button" onclick="openUserModal()">+ Add user</button></div>
+        <div class="table-wrap"><table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th></th></tr></thead><tbody id="user-rows"></tbody></table></div>
+      </section>
+    </main>
+  </div>
+  <div id="modal-root"></div>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  <script>document.addEventListener('DOMContentLoaded', loadDashboard);</script>
+</body>
+</html>

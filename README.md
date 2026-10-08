@@ -1,6 +1,10 @@
-# Ledgerly — Flask Invoicing System
+# Eid Saeed Mahmoud — Accounting System
 
-A modular invoicing system built with **Flask**, **SQLAlchemy**, **SQLite**, and **vanilla JavaScript**.
+A professional solution developed by **Eid Saeed Mahmoud**, supporting his accounting, financial consulting, and business solutions services—not a separate company or independent product brand.
+
+> An Accounting Software Solution Developed as Part of My Professional Experience and Business Solutions Services.
+
+Built with **Flask**, **SQLAlchemy**, **SQLite**, and **vanilla JavaScript**. Personal website integration is pending the existing website source; this repository currently contains the accounting application only.
 
 ## Features
 
@@ -24,14 +28,14 @@ A modular invoicing system built with **Flask**, **SQLAlchemy**, **SQLite**, and
 From PowerShell, run these commands in the project folder:
 
 ```powershell
-py -m pip install -r requirements.txt
-py app.py
+python -m pip install -r requirements.txt
+python app.py
 ```
 
 If the app is already installed and only PDF export is failing:
 
 ```powershell
-py -m pip install reportlab
+python -m pip install reportlab
 ```
 
 ReportLab is loaded only when PDF export is requested, so the application itself can still start without it. The PDF endpoint will return an installation message until ReportLab is installed.

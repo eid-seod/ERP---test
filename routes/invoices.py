@@ -6,6 +6,7 @@ from io import BytesIO
 from flask import Blueprint, jsonify, request, send_file, session
 from sqlalchemy import func, select
 
+from branding import PERSONAL_NAME, SOLUTION_NAME
 from database import get_session
 from models.client import Client
 from models.invoice import AuditTrail, Invoice, InvoiceItem
@@ -144,7 +145,7 @@ def invoice_pdf(invoice_id):
         if not invoice: return jsonify({"error": "Invoice not found."}), 404
         buffer = BytesIO()
         doc = SimpleDocTemplate(buffer, pagesize=A4, rightMargin=18 * mm, leftMargin=18 * mm, topMargin=16 * mm, bottomMargin=16 * mm)
-        styles = getSampleStyleSheet(); story = [Paragraph("<font color='#4263EB'><b>LEDGERLY</b></font>", styles["Title"]), Paragraph(f"INVOICE <b>{invoice.invoice_number}</b>", styles["Heading2"]), Spacer(1, 6 * mm)]
+        styles = getSampleStyleSheet(); story = [Paragraph(f"<font color='#4263EB'><b>{PERSONAL_NAME}</b></font>", styles["Title"]), Paragraph(f"Generated with {SOLUTION_NAME} · A professional solution", styles["Normal"]), Paragraph(f"INVOICE <b>{invoice.invoice_number}</b>", styles["Heading2"]), Spacer(1, 6 * mm)]
         story.append(Paragraph(f"<b>Bill to:</b> {invoice.client.name}<br/>{invoice.client.email or ''}<br/><br/><b>Issue date:</b> {invoice.issue_date} &nbsp;&nbsp; <b>Due:</b> {invoice.due_date or '—'} &nbsp;&nbsp; <b>Currency:</b> {invoice.currency}", styles["Normal"])); story.append(Spacer(1, 7 * mm))
         rows = [["Code", "Item", "Qty", "Unit price", "Discount", "Tax", "Line total"]] + [[item.item_code, item.item_name, f"{item.quantity:g}", f"{invoice.currency} {item.unit_price:,.2f}", f"{invoice.currency} {item.discount:,.2f}", f"{item.tax_rate:g}%", f"{invoice.currency} {item.line_total:,.2f}"] for item in invoice.items]
         table = Table(rows, repeatRows=1, colWidths=[22*mm, 48*mm, 15*mm, 25*mm, 25*mm, 18*mm, 28*mm]); table.setStyle(TableStyle([("BACKGROUND", (0,0), (-1,0), colors.HexColor("#16233B")), ("TEXTCOLOR", (0,0), (-1,0), colors.white), ("GRID", (0,0), (-1,-1), .3, colors.HexColor("#DCE2EC")), ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold"), ("FONTSIZE", (0,0), (-1,-1), 8), ("ALIGN", (2,1), (-1,-1), "RIGHT"), ("VALIGN", (0,0), (-1,-1), "MIDDLE"), ("ROWBACKGROUNDS", (0,1), (-1,-1), [colors.white, colors.HexColor("#F7F8FB")]), ("TOPPADDING", (0,0), (-1,-1), 7), ("BOTTOMPADDING", (0,0), (-1,-1), 7)])); story.append(table); story.append(Spacer(1, 7 * mm))

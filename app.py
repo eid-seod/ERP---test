@@ -5,6 +5,7 @@ from pathlib import Path
 from flask import Flask, jsonify, redirect, render_template, request, session, url_for
 from sqlalchemy import select
 
+from branding import PERSONAL_NAME, SOLUTION_NAME, SOLUTION_DESCRIPTION
 from database import configure_database, get_session, init_db
 from models.user import User
 from routes.auth import bp as auth_bp
@@ -21,6 +22,14 @@ def create_app(test_config=None):
     )
     if test_config: app.config.update(test_config)
     configure_database(app.config["DATABASE_URL"]); init_db()
+
+    @app.context_processor
+    def personal_brand():
+        return {
+            "personal_name": PERSONAL_NAME,
+            "solution_name": SOLUTION_NAME,
+            "solution_description": SOLUTION_DESCRIPTION,
+        }
 
     @app.before_request
     def csrf_protection():
