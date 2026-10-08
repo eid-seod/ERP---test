@@ -57,7 +57,12 @@ def init_db():
             "tds_enabled": "BOOLEAN NOT NULL DEFAULT 0",
             "tds_type": "VARCHAR(10) NOT NULL DEFAULT 'percent'",
             "tds_rate": "NUMERIC(12, 2) NOT NULL DEFAULT 0",
+            "updated_at": "DATETIME",
         })
+        connection.execute(text(
+            "UPDATE invoices SET updated_at = COALESCE(created_at, CURRENT_TIMESTAMP) "
+            "WHERE updated_at IS NULL"
+        ))
         _add_missing_columns(connection, "invoice_items", {
             "item_code": "VARCHAR(80) NOT NULL DEFAULT ''",
             "item_name": "VARCHAR(200) NOT NULL DEFAULT ''",

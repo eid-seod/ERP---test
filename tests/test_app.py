@@ -84,3 +84,33 @@ def test_pdf_export(client):
     assert response.status_code == 200
     assert response.mimetype == 'application/pdf'
     assert response.data.startswith(b'%PDF')
+
+
+def test_existing_database_missing_updated_at_is_upgraded(tmp_path):
+    import sqlite3
+
+    path = tmp_path / 'legacy.db'
+    config = {'TESTING': True, 'SECRET_KEY': 'migration-test', 'DATABASE_URL': f'sqlite:///{path}'}
+    original_app = create_app(config)
+    with original_app.test_client() as client:
+        token = login(client)
+        original_invoice = make_invoice(client, token)
+
+    # Reproduce the schema left by the previous enhancement on older databases.
+    with sqlite3.connect(path) as connection:
+        connection.execute('ALTER TABLE invoices DROP COLUMN updated_at')
+
+    for _ in range(2):
+        upgraded_app = create_app(config)
+        with upgraded_app.test_client() as client:
+            login(client)
+            response = client.get('/invoices')
+            assert response.status_code == 200
+            invoices = response.get_json()['invoices']
+            assert len(invoices) == 1
+            assert invoices[0]['id'] == original_invoice['id']
+            assert invoices[0]['net_payable'] == original_invoice['net_payable']
+            assert client.get(f"/invoices/{original_invoice['id']}").status_code == 200
+        with sqlite3.connect(path) as connection:
+            created_at, updated_at = connection.execute('SELECT created_at, updated_at FROM invoices').fetchone()
+            assert updated_at == created_at
