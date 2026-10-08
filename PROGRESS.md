@@ -60,3 +60,16 @@ Read-only review found two edge cases, both fixed and tested:
 - Python compile, both script syntax checks, whitespace, Compose model and Nginx syntax pass. One unsupported root-level bare pytest discovery initially failed due pre-existing module import collisions; the supported isolated runner passes. The first optional validator path was stale; after discovering the installed binary the actual checks pass.
 - No new heavy dependency, company/tenant/chart-of-accounts/per-company database, new repo/domain or production provisioning. All five existing module folders retained.
 - **The received/live database is NOT migrated in place, and no real Super Admin identity/password is created.** Owner must follow `documentation/super-admin-step1.md` for explicit backup/migration/interactive creation against their existing database. Docker image execution/private-server cutover are not performed here. New Super Admin management soft-deletes only; the original active-normal-user admin hard-delete endpoint is deliberately retained to preserve its existing behavior and cannot delete a Super Admin or already soft-deleted user.
+
+## Follow-up — existing demo startup refusal (2026-10-08)
+
+`--demo` intentionally reuses ignored `runtime/local-demo.db`; it never resets a file or silently upgrades an older schema. An older pre-Super-Admin demo can lack the new user metadata/tables/index and must use the existing explicit migration.
+
+| Existing file edited in this follow-up | Reason |
+| --- | --- |
+| `deployment/accounting_entrypoint.py` | List missing tables, give a quoted explicit upgrade command only for recognized Super Admin schema gaps, and detect a missing normalized email index before import. Preserve read-only fail-closed behavior. |
+| `deployment/tests/test_deployment.py` | Reproduce the old-demo refusal on an external temporary copy; verify rejected startup writes nothing, explicit migration passes while all original row values/password hashes remain intact, unrelated missing financial tables are not mislabelled, and missing index is detected. |
+| `README.md` | Put the Windows migration/restart commands beside `--demo`, with backup/no-reset guidance. |
+| `PROGRESS.md` | Record this follow-up transparently; Step 1 historical evidence above remains unchanged. |
+
+Full isolated rerun: portfolio **9 passed**, accounting **38 passed**, deployment **27 passed**. No accounting application, migration implementation, UI, portfolio, financial logic or live database was changed in this follow-up. The received database still matches its original byte hash and integrity is `ok`. Only disposable test files were migrated outside Git. No real data, secrets or database files are committed.

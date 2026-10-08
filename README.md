@@ -66,6 +66,15 @@ Git deliberately contains **no database**. To try both modules without supplying
 
 This explicitly creates/reuses **ignored `runtime/local-demo.db`**, never an existing real database. On first creation, choose a local demo administrator password (at least 12 characters) in the terminal prompt. Login email is `admin@example.com`; use that chosen password. On subsequent runs, it reuses the demo and existing credentials. The original app performs its own normal initial setup; the launcher does not implement a second accounting system. Do not use demo mode for production or business records. Passwords are never written to Git or printed by the launcher.
 
+**If a previously created demo refuses startup after the Super Admin update:** do not delete/reset the file. Stop the app and keep a consistent backup outside Git first. For a file created with `--demo`, run from this root folder:
+
+```powershell
+.\.venv\Scripts\python.exe accounting-software\migrations\super_admin.py --database ".\runtime\local-demo.db"
+.\.venv\Scripts\python.exe deployment\run_local.py --demo
+```
+
+This explicit migration adds only the Super Admin user metadata/tables/index, preserving existing credentials and financial rows. It does not resolve unrelated missing financial tables or automatically merge duplicate emails. If migration fails or startup still refuses, stop and review that exact error; do not replace the database with an empty file. See [the complete migration/first-admin guide](documentation/super-admin-step1.md).
+
 ### URLs to open
 
 Keep the terminal running and open:
