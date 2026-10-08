@@ -15,13 +15,15 @@ def preflight():
     if len(seed_password) < 12 or seed_password == 'Admin123!':
         raise RuntimeError('Set a strong ADMIN_PASSWORD fallback; existing passwords are not changed.')
     database_url = os.getenv('DATABASE_URL', '')
-    if not database_url.startswith('sqlite:////'):
+    if not database_url.startswith('sqlite:///'):
         raise RuntimeError('DATABASE_URL must point to an explicit existing absolute SQLite file.')
     database_file = Path(database_url[len('sqlite:///'):])
+    if not database_file.is_absolute():
+        raise RuntimeError('DATABASE_URL must use an absolute path, not a relative database file.')
     if not database_file.is_file():
         raise RuntimeError('Existing accounting database is missing. Refusing to create another database.')
     expected_schema = json.loads(SCHEMA_FILE.read_text())
-    with sqlite3.connect(f'file:{database_file}?mode=ro', uri=True) as connection:
+    with sqlite3.connect(database_file.as_uri() + '?mode=ro', uri=True) as connection:
         tables = {row[0] for row in connection.execute("SELECT name FROM sqlite_master WHERE type='table'")}
         if not set(expected_schema).issubset(tables):
             raise RuntimeError('Existing database lacks required tables. No automatic migration is allowed.')
