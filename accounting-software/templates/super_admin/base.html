@@ -6,6 +6,7 @@
 {% block navigation %}
 <a href="/super-admin" {% if request.endpoint == 'super_admin.dashboard' %}class="active"{% endif %}>لوحة Super Admin</a>
 <a href="/super-admin/users" {% if 'user' in request.endpoint or 'create' in request.endpoint %}class="active"{% endif %}>إدارة المستخدمين</a>
+<a href="/super-admin/companies" {% if request.endpoint.startswith('company_admin.') %}class="active"{% endif %}>الشركات</a>
 <a href="/super-admin/audit" {% if request.endpoint == 'super_admin.audit_log' %}class="active"{% endif %}>سجل التدقيق</a>
 <a href="/super-admin/settings" {% if request.endpoint == 'super_admin.settings' %}class="active"{% endif %}>إعدادات المنصة</a>
 <a href="/dashboard">العودة للنظام المحاسبي</a>

@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html {% block html_attributes %}lang="en"{% endblock %}>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>{{ personal_name }} — {{ solution_name }} sign in</title>
+  <title>{% block title %}{{ personal_name }} — {{ solution_name }} sign in{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
 </head>
 <body class="auth-shell">
@@ -13,6 +13,7 @@
     <h1>{{ personal_name }}</h1>
     <p class="muted">{{ solution_description }}</p>
     <p class="muted" style="margin-top:12px">A tool supporting my accounting, financial consulting, and business solutions services—not a standalone company.</p>
+    {% block auth_form %}
     <form id="login-form">
       <label>Email<input name="email" type="email" value="admin@example.com" required autocomplete="email"></label>
       <label>Password<input name="password" type="password" value="Admin123!" required autocomplete="current-password"></label>
@@ -20,8 +21,13 @@
       <p id="form-error" class="error" role="alert"></p>
     </form>
     <div class="demo-hint">Demo admin: <strong>admin@example.com</strong> / <strong>Admin123!</strong></div>
+    {% if public_registration_enabled %}<p><a href="/register">إنشاء حساب جديد</a></p>{% endif %}
+    {% if request.args.get('registered') == '1' %}<p class="flash">تم إنشاء حسابك. أدخل بريدك وكلمة المرور ثم افتح صفحة الشركات من القائمة.</p>{% endif %}
+    {% endblock %}
   </main>
+  {% block scripts %}
   <script src="{{ url_for('static', filename='js/app.js') }}"></script>
   <script>document.getElementById('login-form').addEventListener('submit', login);</script>
+  {% endblock %}
 </body>
 </html>

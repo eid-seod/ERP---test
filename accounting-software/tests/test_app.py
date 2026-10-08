@@ -106,7 +106,14 @@ def test_existing_database_missing_updated_at_is_upgraded(tmp_path):
     with sqlite3.connect(path) as connection:
         connection.execute('ALTER TABLE invoices DROP COLUMN updated_at')
 
+    # Step 2 intentionally forbids automatic upgrades of existing platform data.
+    # Keep this inherited upgrade regression, now explicitly applied to this fixture.
+    with pytest.raises(RuntimeError, match='no automatic migration'):
+        create_app(config)
     for _ in range(2):
+        from database import configure_database, init_db
+        configure_database(config['DATABASE_URL'])
+        init_db()  # Explicit fixture-only legacy upgrade; never the live received file.
         upgraded_app = create_app(config)
         with upgraded_app.test_client() as client:
             login(client)

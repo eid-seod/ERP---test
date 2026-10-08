@@ -19,6 +19,10 @@ def configured(monkeypatch, tmp_path):
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     module.migrate_file(path)
+    spec = importlib.util.spec_from_file_location('step2_migration_fixture', ROOT / 'accounting-software/migrations/companies.py')
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.migrate_file(path)
     monkeypatch.setenv('SECRET_KEY', 'test-only-long-secret-key-at-least-thirty-two-characters')
     monkeypatch.setenv('ADMIN_PASSWORD', 'test-only-strong-fallback-password')
     monkeypatch.setenv('DATABASE_URL', 'sqlite:///' + str(path))
@@ -115,6 +119,12 @@ def test_old_demo_gets_explicit_upgrade_hint_without_writes(monkeypatch, tmp_pat
     with sqlite3.connect(path) as connection:
         tables = ['users', 'clients', 'invoices', 'invoice_items', 'invoice_audit_trail']
         before_rows = {table: connection.execute('SELECT * FROM ' + table).fetchall() for table in tables}
+    module.migrate_file(path)
+    with pytest.raises(RuntimeError, match='Explicit Step 2 migration'):
+        entrypoint.preflight()
+    spec = importlib.util.spec_from_file_location('old_demo_step2_upgrade', ROOT / 'accounting-software/migrations/companies.py')
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
     module.migrate_file(path)
     entrypoint.preflight()
     with sqlite3.connect(path) as connection:

@@ -1,0 +1,17 @@
+{% extends 'login.html' %}
+{% block html_attributes %}lang="ar" dir="rtl"{% endblock %}
+{% block title %}إنشاء حساب — {{ personal_name }}{% endblock %}
+{% block auth_form %}
+<h2>إنشاء حساب مستخدم</h2>
+<p class="muted">حساب قياسي لإنشاء شركتك. لا توجد خدمة للتحقق من البريد الإلكتروني في هذه المرحلة.</p>
+{% if registration_error %}<p class="error" role="alert">{{ registration_error }}</p>{% endif %}
+<form method="post" action="/register">
+<input type="hidden" name="csrf_token" value="{{ registration_csrf }}">
+<label>الاسم<input name="name" value="{{ registration_values.get('name', '') }}" required maxlength="120" autocomplete="name"></label>
+<label>البريد الإلكتروني<input name="email" type="email" value="{{ registration_values.get('email', '') }}" required maxlength="255" autocomplete="email" dir="ltr"></label>
+<label>كلمة المرور<input name="password" type="password" required minlength="8" autocomplete="new-password" dir="ltr"></label>
+<button class="button primary full" type="submit">إنشاء الحساب</button>
+</form>
+<p><a href="/login">لديك حساب؟ تسجيل الدخول</a></p>
+{% endblock %}
+{% block scripts %}{% endblock %}

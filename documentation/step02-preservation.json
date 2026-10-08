@@ -1,0 +1,29 @@
+{
+  "scope": "Authorized Step 2 registration and companies only",
+  "baseline_tag": "baseline-before-step-02",
+  "baseline_commit": "b8964abe18094a48c96016d74753f382371a1f00",
+  "approved_existing_accounting_files": {
+    "app.py": {
+      "sha256": "64163f05a2c78dda61586d9732cd185bf9b5969feac62cef04827a547fe854e4",
+      "reason": "Authorized Step2 integration; exact reason in docs/PROGRESS.md."
+    },
+    "routes/auth.py": {
+      "sha256": "6cb3c01233259b3f370a7e963e3358b826c423bbf676dcba3e1d8141867ca4d3",
+      "reason": "Authorized Step2 integration; exact reason in docs/PROGRESS.md."
+    },
+    "templates/dashboard.html": {
+      "sha256": "be426524eb8110ca395a16874b83e78f161973bd4006f219f08ee68384d9b9ce",
+      "reason": "Authorized Step2 integration; exact reason in docs/PROGRESS.md."
+    },
+    "templates/login.html": {
+      "sha256": "343f407b4c1688d129238223a2d9b400f7ca304a89295eb49f89d23d5f35d8de",
+      "reason": "Authorized Step2 integration; exact reason in docs/PROGRESS.md."
+    },
+    "tests/test_app.py": {
+      "sha256": "7a5d6cd59ab4ade1368cd3de3781970d9ce8a88a204e176252c8082d754d9ddc",
+      "reason": "Authorized Step2 integration; exact reason in docs/PROGRESS.md."
+    }
+  },
+  "historical_and_step1_manifests_retained": true,
+  "platform_received_database_changed": false
+}

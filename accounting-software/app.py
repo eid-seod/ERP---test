@@ -12,6 +12,8 @@ from routes.auth import bp as auth_bp
 from routes.clients import bp as clients_bp
 from routes.invoices import bp as invoices_bp
 from super_admin import init_super_admin, require_existing_upgrade
+from companies.integration import init_companies
+from migrations.companies import require_existing_company_upgrade
 
 
 def create_app(test_config=None):
@@ -24,8 +26,19 @@ def create_app(test_config=None):
     if test_config: app.config.update(test_config)
     engine = configure_database(app.config["DATABASE_URL"])
     require_existing_upgrade(engine)
-    init_db()
+    with engine.connect() as connection:
+        existing_tables = {row[0] for row in connection.exec_driver_sql("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'")}
+        fresh = not existing_tables
+        if existing_tables and 'users' not in existing_tables:
+            raise RuntimeError('Existing platform schema is incomplete. Refusing automatic initialization.')
+    require_existing_company_upgrade(engine)
+    if fresh:
+        init_db()
+    else:
+        from companies.platform_guard import require_existing_business_schema
+        require_existing_business_schema(engine)
     init_super_admin(app)
+    init_companies(app, fresh=fresh)
 
     @app.context_processor
     def personal_brand():
@@ -62,6 +75,8 @@ def create_app(test_config=None):
 
     with get_session() as db:
         if not db.scalar(select(User).where(User.email == "admin@example.com")):
+            if not fresh:
+                raise RuntimeError('Existing platform database lacks its original administrator. Refusing automatic seeding.')
             admin = User(name="System Admin", email="admin@example.com", role="admin"); admin.set_password(os.environ.get("ADMIN_PASSWORD", "Admin123!")); db.add(admin); db.commit()
     return app
 

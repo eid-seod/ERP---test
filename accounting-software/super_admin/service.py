@@ -10,7 +10,7 @@ from models.user import User
 from .models import PlatformSetting, UserAuditEvent, utcnow
 
 ROLES = ('user', 'admin', 'super_admin')
-ACTIONS = ('user.create', 'user.edit', 'user.activate', 'user.deactivate', 'user.password_reset', 'user.soft_delete', 'user.restore', 'registration.toggle', 'auth.login', 'super_admin.bootstrap')
+ACTIONS = ('user.create', 'user.edit', 'user.activate', 'user.deactivate', 'user.password_reset', 'user.soft_delete', 'user.restore', 'registration.toggle', 'auth.login', 'super_admin.bootstrap', 'auth.registration', 'company.created', 'company.create_failed', 'company.suspended', 'company.reactivated', 'workspace.denied', 'companies.limit_changed')
 REGISTRATION = 'public_registration_enabled'
 
 

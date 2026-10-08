@@ -73,3 +73,7 @@ Read-only review found two edge cases, both fixed and tested:
 | `PROGRESS.md` | Record this follow-up transparently; Step 1 historical evidence above remains unchanged. |
 
 Full isolated rerun: portfolio **9 passed**, accounting **38 passed**, deployment **27 passed**. No accounting application, migration implementation, UI, portfolio, financial logic or live database was changed in this follow-up. The received database still matches its original byte hash and integrity is `ok`. Only disposable test files were migrated outside Git. No real data, secrets or database files are committed.
+
+## Step 2 — company setup follow-up
+
+The user-authorized Step2 outcome/edit ledger is now `docs/PROGRESS.md`; accepted decisions are `docs/DECISIONS.md`, and explicit Windows/storage/migration guidance is `documentation/step02-companies.md`. This does not rename/remove Step1 history. The platform database stays in place; separate company settings files are created only on authorized company creation. Existing financial workflows and portfolio remain untouched. Refer to the Step2 tracker for final tests/review/release status rather than interpreting the older Step1 totals as current.

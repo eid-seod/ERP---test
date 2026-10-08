@@ -35,4 +35,5 @@ class PlatformSetting(Base):
     __tablename__ = 'platform_settings'
     key: Mapped[str] = mapped_column(String(80), primary_key=True)
     value: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    integer_value: Mapped[int | None] = mapped_column(Integer, nullable=True)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow, nullable=False)

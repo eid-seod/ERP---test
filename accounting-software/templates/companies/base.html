@@ -1,0 +1,14 @@
+{% extends 'dashboard.html' %}
+{% block html_attributes %}lang="ar" dir="rtl"{% endblock %}
+{% block body_attributes %}class="sa-area"{% endblock %}
+{% block title %}الشركات — {{ personal_name }}{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/super_admin.css') }}">{% endblock %}
+{% block navigation %}
+<a href="/companies" class="active">شركتي</a>
+<a href="/companies/new">إعداد شركة</a>
+<a href="/dashboard">النظام المحاسبي الحالي</a>
+<a href="/">الموقع الشخصي</a>
+{% endblock %}
+{% block heading %}<div><p class="eyebrow">إعداد الشركة / {{ personal_name }}</p><h1>{% block company_heading %}الشركات{% endblock %}</h1></div><span class="muted">{{ super_identity.name }}</span>{% endblock %}
+{% block main_content %}{% block company_content %}{% endblock %}{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/super_admin.js') }}" data-csrf="{{ csrf_token }}" defer></script>{% endblock %}

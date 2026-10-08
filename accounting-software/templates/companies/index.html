@@ -1,0 +1,9 @@
+{% extends 'companies/base.html' %}
+{% block company_heading %}شركاتي{% endblock %}
+{% block company_content %}
+<section class="panel"><div class="panel-heading"><h2>إعداد شركاتك</h2>{% if can_create %}<a class="button primary" href="/companies/new">+ إنشاء شركة</a>{% endif %}</div>
+<p class="muted">حد الشركات لحسابك: {{ maximum }}. بيانات النظام المحاسبي الحالي لم يتم نقلها إلى الشركات.</p>
+<div class="table-wrap"><table><thead><tr><th>الاسم</th><th>نوع الشركة</th><th>العملة</th><th>الحالة</th><th></th></tr></thead><tbody>
+{% for company in companies %}<tr><td>{{ company.name }}</td><td>{{ type_labels.get(company.company_type, company.company_type) }}</td><td><bdi>{{ company.base_currency }}</bdi></td><td><bdi>{{ company.status }}</bdi></td><td><a class="text-button" href="/companies/{{ company.id }}">فتح مساحة الشركة</a></td></tr>{% else %}<tr><td colspan="5" class="empty">لم تُنشئ شركة بعد. ابدأ إعداد بياناتها الأساسية.</td></tr>{% endfor %}
+</tbody></table></div></section>
+{% endblock %}

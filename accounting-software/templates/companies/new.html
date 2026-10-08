@@ -1,0 +1,16 @@
+{% extends 'companies/base.html' %}
+{% block company_heading %}إنشاء شركة{% endblock %}
+{% block company_content %}
+<section class="panel"><div class="panel-heading"><h2>البيانات الأساسية</h2><span class="muted">مصر — Egypt / VAT</span></div>
+{% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+<form method="post" class="sa-form" action="/companies/new"><input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+<label>اسم الشركة<input name="name" value="{{ values.get('name', '') }}" required maxlength="120"></label>
+<p class="eyebrow">نوع الشركة</p><div class="metrics">{% for value,label in type_labels.items() %}<article><label class="sa-checkbox"><input type="radio" name="company_type" value="{{ value }}" {% if values.get('company_type') == value %}checked{% endif %} required>{{ label }}</label><small><bdi>{{ value }}</bdi></small></article>{% endfor %}</div>
+<label>الشكل القانوني<select name="legal_form" required><option value="">اختر</option>{% for value,label in legal_labels.items() %}<option value="{{ value }}" {% if values.get('legal_form') == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></label>
+<label>العملة الأساسية<select name="base_currency" required>{% for value in currencies %}<option value="{{ value }}" {% if values.get('base_currency', 'EGP') == value %}selected{% endif %}>{{ value }}</option>{% endfor %}</select></label>
+<label>بداية السنة المالية — الشهر<select name="fiscal_year_start_month" required>{% for month in range(1,13) %}<option value="{{ month }}" {% if values.get('fiscal_year_start_month', 1)|string == month|string %}selected{% endif %}>{{ month }}</option>{% endfor %}</select></label>
+<label>رقم التسجيل الضريبي — اختياري<input name="tax_id" value="{{ values.get('tax_id', '') }}" maxlength="80"></label>
+<p class="muted">يُنشأ ملف بيانات مستقل لبيانات الشركة الأساسية فقط. إعداد الوحدات المحاسبية سيكون في مراحل لاحقة. لا توجد فواتير أو تقارير للشركة في هذه المرحلة.</p>
+<button class="button primary" type="submit">إنشاء الشركة وفتح مساحة العمل</button>
+</form></section>
+{% endblock %}

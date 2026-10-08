@@ -15,6 +15,14 @@ def super_admin_migration_error(problem, database_file):
         'Restart the same launcher afterward. Existing passwords/data are retained; no file is reset or migrated automatically.')
 
 
+def company_migration_error(problem, database_file):
+    migration = Path(__file__).resolve().parents[1] / 'accounting-software/migrations/companies.py'
+    return RuntimeError(problem + '\nExplicit Step 2 migration required after Step 1. '
+        'Stop writers and back up the existing platform file outside Git, then run:\n'
+        f'python "{migration}" --database "{database_file}"\n'
+        'The platform database is not moved or replaced. No automatic migration is allowed.')
+
+
 def preflight():
     secret = os.getenv('SECRET_KEY', '')
     if len(secret) < 32 or secret == 'dev-only-change-me':
@@ -36,8 +44,10 @@ def preflight():
         missing_tables = set(expected_schema) - tables
         if missing_tables:
             problem = 'Existing database lacks required tables: ' + ', '.join(sorted(missing_tables)) + '. No automatic migration is allowed.'
-            if missing_tables.issubset({'user_audit_events', 'platform_settings'}):
+            if missing_tables & {'user_audit_events', 'platform_settings'} and missing_tables.issubset({'user_audit_events', 'platform_settings', 'companies', 'company_memberships'}):
                 raise super_admin_migration_error(problem, database_file)
+            if missing_tables.issubset({'companies', 'company_memberships'}):
+                raise company_migration_error(problem, database_file)
             raise RuntimeError(problem)
         for table, columns in expected_schema.items():
             actual = {row[1]: row[2].upper() for row in connection.execute('PRAGMA table_info(' + table + ')')}
@@ -46,10 +56,15 @@ def preflight():
                 problem = 'Database columns require review: ' + table + '. Refusing automatic migration.'
                 if table == 'users' and missing_columns and missing_columns.issubset({'deleted_at', 'last_login_at', 'session_epoch'}) and all(actual.get(column['name']) == column['type'].upper() for column in columns if column['name'] not in missing_columns):
                     raise super_admin_migration_error(problem, database_file)
+                if table == 'platform_settings' and missing_columns == {'integer_value'}:
+                    raise company_migration_error(problem, database_file)
                 raise RuntimeError(problem)
         user_indexes = {row[1]: row[2] for row in connection.execute('PRAGMA index_list(users)')}
         if user_indexes.get('ux_users_email_normalized') != 1:
             raise super_admin_migration_error('Existing users schema lacks the required normalized email unique index.', database_file)
+        maximum = connection.execute("SELECT integer_value FROM platform_settings WHERE key='max_companies_per_user'").fetchone()
+        if not maximum or not isinstance(maximum[0], int) or not 1 <= maximum[0] <= 100:
+            raise company_migration_error('Missing or invalid max_companies_per_user setting.', database_file)
         if connection.execute('PRAGMA integrity_check').fetchone()[0] != 'ok':
             raise RuntimeError('SQLite integrity check failed. No application startup performed.')
         if list(connection.execute('PRAGMA foreign_key_check')):

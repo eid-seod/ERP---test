@@ -131,6 +131,9 @@ def users():
     with get_session() as db:
         items, pagination = paginated(db, query)
         results = [snapshot(user) for user in items]
+        from companies.models import Company
+        owner_ids = set(db.scalars(select(Company.owner_user_id).where(Company.owner_user_id.in_([user.id for user in items])))) if items else set()
+        for result in results: result['has_company'] = result['id'] in owner_ids
     if wants_json():
         return jsonify({'users': results, 'pagination': pagination})
     return render_template('super_admin/users.html', users=results, pagination=pagination)
@@ -258,6 +261,10 @@ def settings():
         flash('تم تحديث إعداد التسجيل وتسجيل التغيير.', 'success')
         return redirect(url_for('super_admin.settings'))
     enabled = registration_enabled()
+    from .models import PlatformSetting
+    with get_session() as db:
+        setting = db.get(PlatformSetting, 'max_companies_per_user')
+        maximum = setting.integer_value if setting and setting.integer_value is not None else 1
     if wants_json():
-        return jsonify({'public_registration_enabled': enabled})
-    return render_template('super_admin/settings.html', enabled=enabled)
+        return jsonify({'public_registration_enabled': enabled, 'max_companies_per_user': maximum})
+    return render_template('super_admin/settings.html', enabled=enabled, maximum=maximum)

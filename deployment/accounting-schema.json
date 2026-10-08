@@ -255,6 +255,78 @@
     {
       "name": "updated_at",
       "type": "DATETIME"
+    },
+    {
+      "name": "integer_value",
+      "type": "INTEGER"
+    }
+  ],
+  "companies": [
+    {
+      "name": "id",
+      "type": "INTEGER"
+    },
+    {
+      "name": "name",
+      "type": "VARCHAR(120)"
+    },
+    {
+      "name": "company_type",
+      "type": "VARCHAR(30)"
+    },
+    {
+      "name": "legal_form",
+      "type": "VARCHAR(40)"
+    },
+    {
+      "name": "base_currency",
+      "type": "VARCHAR(3)"
+    },
+    {
+      "name": "fiscal_year_start_month",
+      "type": "INTEGER"
+    },
+    {
+      "name": "tax_id",
+      "type": "VARCHAR(80)"
+    },
+    {
+      "name": "status",
+      "type": "VARCHAR(20)"
+    },
+    {
+      "name": "owner_user_id",
+      "type": "INTEGER"
+    },
+    {
+      "name": "db_filename",
+      "type": "VARCHAR(160)"
+    },
+    {
+      "name": "schema_version",
+      "type": "INTEGER"
+    },
+    {
+      "name": "created_at",
+      "type": "DATETIME"
+    }
+  ],
+  "company_memberships": [
+    {
+      "name": "user_id",
+      "type": "INTEGER"
+    },
+    {
+      "name": "company_id",
+      "type": "INTEGER"
+    },
+    {
+      "name": "role",
+      "type": "VARCHAR(20)"
+    },
+    {
+      "name": "status",
+      "type": "VARCHAR(20)"
     }
   ]
 }

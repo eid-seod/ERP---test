@@ -13,3 +13,6 @@
 **/*.bundle
 **/*.zip
 runtime
+**/*.db.tmp
+company-data
+company_data

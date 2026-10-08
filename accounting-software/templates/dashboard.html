@@ -19,6 +19,7 @@
         <a href="#clients">Clients</a>
         <a id="users-link" href="#users" hidden>Team</a>
         {% if super_identity and super_identity.role == 'super_admin' %}<a href="/super-admin">Super Admin</a>{% endif %}
+        {% if super_identity and super_identity.role == 'user' %}<a href="/companies">شركتي</a>{% endif %}
         {% endblock %}
       </nav>
       <button id="logout" class="logout">Sign out</button>

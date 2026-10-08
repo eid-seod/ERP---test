@@ -70,10 +70,13 @@ This explicitly creates/reuses **ignored `runtime/local-demo.db`**, never an exi
 
 ```powershell
 .\.venv\Scripts\python.exe accounting-software\migrations\super_admin.py --database ".\runtime\local-demo.db"
+.\.venv\Scripts\python.exe accounting-software\migrations\companies.py --database ".\runtime\local-demo.db"
 .\.venv\Scripts\python.exe deployment\run_local.py --demo
 ```
 
 This explicit migration adds only the Super Admin user metadata/tables/index, preserving existing credentials and financial rows. It does not resolve unrelated missing financial tables or automatically merge duplicate emails. If migration fails or startup still refuses, stop and review that exact error; do not replace the database with an empty file. See [the complete migration/first-admin guide](documentation/super-admin-step1.md).
+
+Step 2's separate `companies.py` command adds the company registry/memberships and numeric company limit to that SAME platform file. Existing invoice/client tables are not moved or changed. [Step 2 Windows/storage/setup guide](documentation/step02-companies.md) explains the external company-data directory and registration toggle.
 
 ### URLs to open
 
@@ -138,3 +141,9 @@ Module tests run in separate processes to avoid `app.py` import-name collisions;
 ## 6. Step 1 — Super Admin only
 
 See [migration, bootstrap and Windows instructions](documentation/super-admin-step1.md) and [exact existing-file edit ledger](PROGRESS.md). `/super-admin` manages users, roles, user audit and one registration flag; no financial queries, company/tenancy modules or new dependencies. Public registration defaults **OFF**; the original login remains unchanged. The first Super Admin is created interactively with `python -m flask --app accounting-software/app.py create-super-admin` after selecting the existing migrated database and runtime environment. No default Super Admin password exists. Lockout/unlock and mandatory-password-change controls are unsupported and deliberately omitted.
+
+## 7. Step 2 — registration and company setup only
+
+Public `/register` is available only when the existing Super Admin setting is ON (still OFF by default). New accounts are standard users. `/companies/new` creates one generated external SQLite file with only company settings/schema history, and `/companies/<id>` is owner-only. Super Admin `/super-admin/companies` sees registry metadata and schema-only health, not company settings/data. Existing invoices/clients stay in the original platform database. No company financial modules, subscription or email verification is included.
+
+Follow [Step 2 exact Windows rollout and limitations](documentation/step02-companies.md), [accepted decisions](docs/DECISIONS.md) and [the complete Step 2 edit ledger](docs/PROGRESS.md). Set `COMPANY_DATA_DIR` outside source (for Windows, `$env:COMPANY_DATA_DIR = Join-Path $env:LOCALAPPDATA 'EidSaeedMahmoud\company-data'`). In production add this existing private directory to ignored `deployment/.env`; it is a second storage mount inside the same accounting service, not another server/domain. Fresh explicit demos use the current schema; existing files require explicit Step1 then Step2 migrations.

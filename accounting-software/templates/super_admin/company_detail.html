@@ -1,0 +1,11 @@
+{% extends 'super_admin/base.html' %}
+{% block sa_heading %}{{ company.name }}{% endblock %}
+{% block sa_content %}
+<section class="panel"><div class="panel-heading"><h2>بيانات سجل الشركة</h2><span class="status">{{ company.status }}</span></div>
+<p>المالك: {% if company.owner %}<a href="/super-admin/users/{{ company.owner.id }}">{{ company.owner.name }}</a> — <bdi>{{ company.owner.email }}</bdi>{% else %}—{% endif %}</p>
+<p>النوع: {{ type_labels.get(company.company_type,company.company_type) }}</p><p>الشكل القانوني: {{ legal_labels.get(company.legal_form,company.legal_form) }}</p><p>العملة: <bdi>{{ company.base_currency }}</bdi></p><p>بداية السنة المالية: {{ company.fiscal_year_start_month }}</p><p>رقم التسجيل الضريبي: {{ company.tax_id or '—' }}</p><p>نسخة المخطط: {{ company.schema_version }}</p><p>تاريخ الإنشاء: <bdi>{{ company.created_at }}</bdi></p>
+<p>الملف موجود: {{ 'نعم' if company.health.file_exists else 'لا' }} — قابل للقراءة: {{ 'نعم' if company.health.readable else 'لا' }} — النسخة مطابقة: {{ 'نعم' if company.health.schema_version_matches else 'لا' }}</p>
+<p class="muted">الفحص يقرأ schema_meta فقط؛ لا يمكن لـ Super Admin فتح إعدادات أو بيانات الشركة.</p>
+{% if company.status in ['active','suspended'] %}<form method="post" action="/super-admin/companies/{{ company.id }}/status" data-confirm="تأكيد تغيير حالة الشركة؟"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><input type="hidden" name="action" value="{{ 'suspend' if company.status == 'active' else 'reactivate' }}"><button class="button secondary" type="submit">{{ 'تعليق الشركة' if company.status == 'active' else 'إعادة تفعيل الشركة' }}</button></form>{% endif %}
+</section>
+{% endblock %}

@@ -9,11 +9,17 @@ services:
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Set a strong seed fallback; existing passwords are not changed}
       DATABASE_URL: sqlite:////data/database.db
       APP_ENV: production
-      APP_VERSION: ${APP_VERSION:-super-admin-step1}
+      APP_VERSION: ${APP_VERSION:-step-02-companies}
+      COMPANY_DATA_DIR: /company-data
     volumes:
       - type: bind
         source: ${ACCOUNTING_DATA_DIR:?Set the existing database directory}
         target: /data
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${COMPANY_DATA_DIR:?Set an existing private external company-data directory}
+        target: /company-data
         bind:
           create_host_path: false
     restart: unless-stopped
