@@ -1,9 +1,9 @@
 <!doctype html>
-<html {% block html_attributes %}lang="en"{% endblock %}>
+<html {% block html_attributes %}lang="ar" dir="rtl"{% endblock %}>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>{% block title %}{{ personal_name }} — {{ solution_name }} sign in{% endblock %}</title>
+  <title>{% block title %}تسجيل دخول المستخدمين — {{ personal_name }}{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
 </head>
 <body class="auth-shell">
@@ -12,22 +12,22 @@
     <p class="eyebrow">{{ solution_name }}</p>
     <h1>{{ personal_name }}</h1>
     <p class="muted">{{ solution_description }}</p>
-    <p class="muted" style="margin-top:12px">A tool supporting my accounting, financial consulting, and business solutions services—not a standalone company.</p>
+    <p class="muted" style="margin-top:12px">حل يدعم خدماتي المحاسبية والاستشارات المالية وحلول الأعمال، وليس شركة مستقلة.</p>
     {% block auth_form %}
-    <form id="login-form">
-      <label>Email<input name="email" type="email" value="admin@example.com" required autocomplete="email"></label>
-      <label>Password<input name="password" type="password" value="Admin123!" required autocomplete="current-password"></label>
-      <button class="button primary full" type="submit">Open Accounting System <span aria-hidden="true">→</span></button>
-      <p id="form-error" class="error" role="alert"></p>
+    <h2>تسجيل دخول المستخدمين</h2>
+    <p class="muted">ادخل إلى حسابك وDashboard. يستخدم مسؤولو الحسابات الحاليون هذه الواجهة أيضًا.</p>
+    {% if login_error %}<p class="error" role="alert">{{ login_error }}</p>{% endif %}
+    <form id="login-form" method="post" action="/login">
+      <input type="hidden" name="csrf_token" value="{{ login_csrf }}">
+      <label>البريد الإلكتروني<input name="email" type="email" value="{{ login_email or '' }}" required maxlength="255" autocomplete="username" dir="ltr"></label>
+      <label>كلمة المرور<input name="password" type="password" required autocomplete="current-password" dir="ltr"></label>
+      <button class="button primary full" type="submit">تسجيل الدخول <small><bdi>Open Accounting System</bdi></small></button>
     </form>
-    <div class="demo-hint">Demo admin: <strong>admin@example.com</strong> / <strong>Admin123!</strong></div>
-    {% if public_registration_enabled %}<p><a href="/register">إنشاء حساب جديد</a></p>{% endif %}
+    {% if public_registration_enabled %}<p><a href="/register">إنشاء حساب مستخدم جديد</a></p>{% else %}<p class="muted">التسجيل العام غير متاح حاليًا. تواصل مع مسؤول النظام.</p>{% endif %}
+    <p><a href="/super-admin/login">تسجيل دخول Super Admin</a></p>
     {% if request.args.get('registered') == '1' %}<p class="flash">تم إنشاء حسابك. أدخل بريدك وكلمة المرور ثم افتح صفحة الشركات من القائمة.</p>{% endif %}
     {% endblock %}
   </main>
-  {% block scripts %}
-  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
-  <script>document.getElementById('login-form').addEventListener('submit', login);</script>
-  {% endblock %}
+  {% block scripts %}{% endblock %}
 </body>
 </html>

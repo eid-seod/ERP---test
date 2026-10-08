@@ -27,8 +27,10 @@ def init_super_admin(app):
                 tail = request.path.split('/')[-1]
                 if tail.isdigit(): _record_denied(session.get('user_id'), int(tail), 'session_revoked', request.remote_addr)
             session.clear()
-            if request.path in {'/', '/login', '/register', '/logout'} or request.path.startswith('/static/'):
+            if request.path in {'/', '/login', '/super-admin/login', '/register', '/logout'} or request.path.startswith('/static/'):
                 return None
+            if request.path.startswith('/super-admin'):
+                return redirect('/super-admin/login')
             if request.path.startswith(('/super-admin', '/dashboard', '/invoice/', '/companies')):
                 return redirect('/login')
             return jsonify({'error': 'Authentication required.'}), 401

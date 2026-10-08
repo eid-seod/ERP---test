@@ -1,0 +1,22 @@
+{
+  "scope": "Authorized separate user and Super Admin login interfaces; no financial/schema changes",
+  "baseline_commit": "ad4130e3268d6f0f87f449c2cae58a88aa54423c",
+  "approved_existing_accounting_files": {
+    "app.py": {
+      "sha256": "670ed26e9d1de1228602a784b0e8ee89a7fb0e56406a4cae23626e93c7ed7328",
+      "reason": "Register separate portal and render form CSRF."
+    },
+    "routes/auth.py": {
+      "sha256": "0ef9a1b69e46b9396dae27b28ced568117a76e27aa468d68604ce26576d2cf24",
+      "reason": "Shared portal authentication plus verified-role logout destination."
+    },
+    "templates/login.html": {
+      "sha256": "0cc16e842e895aeef38d033643da521faaf8e1ed9504c875750883bf8638bd1a",
+      "reason": "Native user login interface, empty credentials, separate administration link."
+    },
+    "static/js/app.js": {
+      "sha256": "5bb442bf0c0e9d613ef50d9525cf1d46a2700da2da08d00dc6efa13bfaae54b0",
+      "reason": "Logout function only: honor fixed server portal destination from original dashboard; all financial logic identical."
+    }
+  }
+}

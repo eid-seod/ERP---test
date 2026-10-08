@@ -21,7 +21,7 @@ def wants_json():
 def protect_area():
     user = g.get('super_identity')
     if not user:
-        return redirect('/login')
+        return redirect('/super-admin/login')
     if user.role != 'super_admin':
         abort(403)
     if request.method not in {'GET', 'HEAD', 'OPTIONS'}:

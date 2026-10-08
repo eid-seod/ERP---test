@@ -83,7 +83,9 @@ Step 2's separate `companies.py` command adds the company registry/memberships a
 Keep the terminal running and open:
 
 - **Arabic portfolio:** http://127.0.0.1:8000/
-- **Original accounting login:** http://127.0.0.1:8000/login
+- **User/legacy admin login:** http://127.0.0.1:8000/login
+- **Super Admin login:** http://127.0.0.1:8000/super-admin/login
+- **User registration (when enabled):** http://127.0.0.1:8000/register
 - **Accounting Dashboard after login:** http://127.0.0.1:8000/dashboard
 - **Example Arabic article:** http://127.0.0.1:8000/blog/cash-flow-planning
 
@@ -108,7 +110,7 @@ Linux/macOS equivalent after creating/installing a virtualenv:
 | Local same-origin routing | `deployment/run_local.py`; forwards original paths without stripping or rewriting them |
 | Production same-origin routing | `deployment/routing.conf`; `/` goes to portfolio, original `/login`, `/dashboard`, `/invoice/*`, APIs and `/static/*` go to accounting |
 
-The historical accounting manifest is retained at baseline `551f23d49e75cb296cbf61e7162fc04fe7c730bc`. Step 1 has an explicit authorized source-change overlay and tagged pre-change baseline; it is not falsely described as whole-app source-identical. Invoice/client business logic, existing accounting CSS/JS/login, branding and portfolio are unchanged. Public phone is the supplied `01000062838`. Inquiry preparation sends/stores nothing; no other personal details or country code are invented.
+The historical accounting manifest is retained at baseline `551f23d49e75cb296cbf61e7162fc04fe7c730bc`. Authorized Step 1/Step 2/login-interface overlays retain precise change evidence; this is not whole-app source identity. Invoice/client business logic, financial accounting CSS/JS, branding and portfolio content are unchanged. Login interfaces are now separately authorized: user/admin at `/login`, Super Admin at `/super-admin/login`. Public phone is the supplied `01000062838`. Inquiry preparation sends/stores nothing; no other personal details or country code are invented.
 
 ## 4. Private-server production deployment
 
@@ -143,6 +145,8 @@ Module tests run in separate processes to avoid `app.py` import-name collisions;
 See [migration, bootstrap and Windows instructions](documentation/super-admin-step1.md) and [exact existing-file edit ledger](PROGRESS.md). `/super-admin` manages users, roles, user audit and one registration flag; no financial queries, company/tenancy modules or new dependencies. Public registration defaults **OFF**; the original login remains unchanged. The first Super Admin is created interactively with `python -m flask --app accounting-software/app.py create-super-admin` after selecting the existing migrated database and runtime environment. No default Super Admin password exists. Lockout/unlock and mandatory-password-change controls are unsupported and deliberately omitted.
 
 ## 7. Step 2 — registration and company setup only
+
+**Current login interfaces:** regular user/legacy admin: `/login`; Super Admin: `/super-admin/login`; user signup: `/register` when enabled. Super Admin signs in only through its dedicated portal and lands at `/super-admin`; users/admins land at `/dashboard`. See [separate login Windows guide](documentation/separate-login-guide.md). This interface release needs no additional database migration; the earlier Step 2 migration is still required if missing. The historical Step 1 unchanged-login note above describes that release, not this new interface update.
 
 Public `/register` is available only when the existing Super Admin setting is ON (still OFF by default). New accounts are standard users. `/companies/new` creates one generated external SQLite file with only company settings/schema history, and `/companies/<id>` is owner-only. Super Admin `/super-admin/companies` sees registry metadata and schema-only health, not company settings/data. Existing invoices/clients stay in the original platform database. No company financial modules, subscription or email verification is included.
 

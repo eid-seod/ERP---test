@@ -14,6 +14,7 @@ from routes.invoices import bp as invoices_bp
 from super_admin import init_super_admin, require_existing_upgrade
 from companies.integration import init_companies
 from migrations.companies import require_existing_company_upgrade
+from login_portals import bp as login_portals_bp, login_page as render_login_page
 
 
 def create_app(test_config=None):
@@ -55,12 +56,13 @@ def create_app(test_config=None):
                 return jsonify({"error": "Invalid CSRF token."}), 400
 
     app.register_blueprint(auth_bp); app.register_blueprint(clients_bp); app.register_blueprint(invoices_bp)
+    app.register_blueprint(login_portals_bp)
 
     @app.get("/")
     def index(): return redirect(url_for("dashboard")) if session.get("user_id") else redirect(url_for("login_page"))
 
     @app.get("/login")
-    def login_page(): return render_template("login.html")
+    def login_page(): return render_login_page('user')
 
     @app.get("/dashboard")
     def dashboard():

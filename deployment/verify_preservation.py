@@ -16,6 +16,9 @@ def verify(check_database=True):
     step2_path = ROOT / 'documentation/step02-preservation.json'
     step2 = json.loads(step2_path.read_text()) if step2_path.is_file() else {}
     approved = {**approved, **step2.get('approved_existing_accounting_files', {})}
+    login_path = ROOT / 'documentation/split-login-preservation.json'
+    login = json.loads(login_path.read_text()) if login_path.is_file() else {}
+    approved = {**approved, **login.get('approved_existing_accounting_files', {})}
     if set(approved) - set(manifest['files']):
         raise RuntimeError('Unexpected original-file override in authorized manifests.')
     for relative, historical in manifest['files'].items():
@@ -27,7 +30,7 @@ def verify(check_database=True):
     if check_database and hashlib.sha256(database.read_bytes()).hexdigest() != manifest['database']['sha256']:
         raise RuntimeError('Accounting database differs from original received baseline. Use --source-only after an approved migration or legitimate data changes.')
     results = {'accounting_files_verified': len(manifest['files']), 'historical_baseline': manifest['baseline_commit'],
-        'approved_source_extension': step2.get('scope', overlay.get('scope')), 'approved_existing_changes': sorted(approved),
+        'approved_source_extension': login.get('scope', step2.get('scope', overlay.get('scope'))), 'approved_existing_changes': sorted(approved),
         'database_hash_matches_original_received': check_database,
         'nested_git_directories': [str(path) for path in ROOT.rglob('.git') if path != ROOT / '.git']}
     if results['nested_git_directories']:

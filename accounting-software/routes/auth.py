@@ -9,6 +9,7 @@ from sqlalchemy.exc import IntegrityError
 from database import get_session
 from models.user import User
 from auth_throttle import check_attempt
+from login_portals import authenticate
 
 bp = Blueprint("auth", __name__)
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
@@ -39,25 +40,7 @@ def current_user():
 
 @bp.post("/login")
 def login():
-    data = _payload()
-    if not isinstance(data, dict) or not isinstance(data.get('email', ''), str) or not isinstance(data.get('password', ''), str):
-        return jsonify({'error': 'Invalid login data.'}), 400
-    email = data.get("email", "").strip().lower()
-    limited = check_attempt('login', email)
-    if limited is not None: return limited
-    with get_session() as db:
-        user = db.scalar(select(User).where(func.lower(User.email) == email, User.is_active.is_(True), User.deleted_at.is_(None)))
-        if not user or not user.check_password(data.get("password", "")):
-            return jsonify({"error": "Invalid email or password."}), 401
-        from super_admin.service import record_login
-        record_login(db, user, request.remote_addr)
-        db.commit()
-        session.clear()
-        session["user_id"] = user.id
-        session["role"] = user.role
-        session["session_epoch"] = user.session_epoch
-        session["csrf_token"] = current_app.config["TOKEN_FACTORY"]()
-        return jsonify({"user": user.to_dict(), "csrf_token": session["csrf_token"]})
+    return authenticate('user')
 
 
 @bp.route("/register", methods=["GET", "POST"])
@@ -105,7 +88,9 @@ def register():
 
 @bp.post("/logout")
 def logout():
-    session.clear(); return jsonify({"message": "Logged out."})
+    user = current_user()
+    destination = '/super-admin/login' if user and user.role == 'super_admin' else '/login'
+    session.clear(); return jsonify({"message": "Logged out.", "redirect_url": destination})
 
 
 @bp.get("/me")

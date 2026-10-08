@@ -91,7 +91,10 @@ def identities(company_app):
 
 def sign_in(app, identity):
     client = app.test_client()
-    response = client.post("/login", json={"email": identity["email"], "password": identity["password"]})
+    with database.get_session() as db:
+        role = db.scalar(select(User.role).where(User.email == identity['email']))
+    path = '/super-admin/login' if role == 'super_admin' else '/login'
+    response = client.post(path, json={"email": identity["email"], "password": identity["password"]})
     assert response.status_code == 200, response.get_data(as_text=True)
     return client, {"X-CSRF-Token": response.get_json()["csrf_token"]}
 
@@ -241,7 +244,7 @@ def test_throttle_counts_email_across_ips_and_ip_across_emails(company_app):
 def test_anonymous_company_routes_redirect_to_login(company_app, method, path):
     response = getattr(company_app.test_client(), method)(path, json={}) if method == "post" else getattr(company_app.test_client(), method)(path)
     assert response.status_code == 302
-    assert response.headers["Location"] == "/login"
+    assert response.headers["Location"] == ('/super-admin/login' if path.startswith('/super-admin') else '/login')
 
 
 @pytest.mark.parametrize("role_key", ["admin", "SuperoneAdmin"])

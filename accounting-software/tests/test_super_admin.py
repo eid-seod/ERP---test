@@ -34,7 +34,10 @@ def setup(tmp_path):
 
 def signin(app, identity):
     client = app.test_client()
-    response = client.post('/login', json={'email': identity['email'], 'password': identity['password']})
+    with database.get_session() as db:
+        role = db.scalar(select(User.role).where(func.lower(User.email) == identity['email'].lower()))
+    path = '/super-admin/login' if role == 'super_admin' else '/login'
+    response = client.post(path, json={'email': identity['email'], 'password': identity['password']})
     assert response.status_code == 200
     return client, {'X-CSRF-Token': response.json['csrf_token']}
 
@@ -53,7 +56,7 @@ def post(client, headers, path, data=None):
 def test_unauthenticated_redirects_to_existing_login(setup, path):
     response = setup[0].test_client().get('/super-admin' + path)
     assert response.status_code == 302
-    assert response.headers['Location'] == '/login'
+    assert response.headers['Location'] == '/super-admin/login'
 
 
 @pytest.mark.parametrize('role', ['user', 'admin'])

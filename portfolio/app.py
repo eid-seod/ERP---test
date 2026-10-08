@@ -55,6 +55,7 @@ def create_app(test_config=None):
         routes = [{'path': '/', 'title': 'عيد سعيد محمود — الملف المهني'}]
         routes += [{'path': '/blog/' + item['slug'], 'title': item['title']} for item in ARTICLES]
         routes += [{'path': '/login', 'title': 'تسجيل الدخول للنظام المحاسبي'}, {'path': '/dashboard', 'title': 'Dashboard'}, {'path': '/invoice/new', 'title': 'الفاتورة الجديدة'}, {'path': '/invoice/:invoice_id/edit', 'title': 'عرض الفاتورة'}]
+        routes += [{'path': '/super-admin/login', 'title': 'تسجيل دخول Super Admin'}, {'path': '/register', 'title': 'إنشاء حساب مستخدم'}]
         return jsonify({'routes': routes})
 
     @app.get('/robots.txt')
