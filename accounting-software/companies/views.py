@@ -4,8 +4,9 @@ from sqlalchemy import select
 from database import get_session
 from super_admin.models import PlatformSetting
 from .config import COMPANY_TYPE_LABELS, LEGAL_FORM_LABELS, CURRENCIES
+from .chart_config import KIND_LABELS, PACK_LABELS
 from .models import Company, CompanyMembership
-from .storage import CompanyError, provision_company, company_workspace, _public_company
+from .storage import CompanyError, provision_company, company_workspace, read_company_chart, _public_company
 
 bp = Blueprint('companies', __name__, url_prefix='/companies')
 
@@ -94,4 +95,11 @@ def workspace(company_id):
     result = company_workspace(company_id, g.super_identity.id, expected_epoch=session.get('session_epoch', 0), ip=request.remote_addr)
     result['status'] = 'active'
     if wants_json(): return jsonify({'company': result})
-    return render_template('companies/workspace.html', company=result)
+    chart = read_company_chart(company_id, g.super_identity.id, expected_epoch=session.get('session_epoch', 0), ip=request.remote_addr)
+    return render_template('companies/workspace.html', company=result, accounts=chart, pack_labels=PACK_LABELS, kind_labels=KIND_LABELS)
+
+
+@bp.get('/<int:company_id>/chart-of-accounts')
+def chart_of_accounts(company_id):
+    accounts = read_company_chart(company_id, g.super_identity.id, expected_epoch=session.get('session_epoch', 0), ip=request.remote_addr)
+    return jsonify({'accounts': accounts})

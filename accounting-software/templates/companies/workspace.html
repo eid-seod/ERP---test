@@ -3,6 +3,12 @@
 {% block company_content %}
 <section class="panel"><div class="panel-heading"><h2>مساحة الشركة</h2><span class="status status-paid">{{ company.status }}</span></div>
 <div class="sa-detail"><p><strong>نوع الشركة:</strong> {{ type_labels.get(company.company_type, company.company_type) }}</p><p><strong>الشكل القانوني:</strong> {{ legal_labels.get(company.legal_form, company.legal_form) }}</p><p><strong>العملة الأساسية:</strong> <bdi>{{ company.base_currency }}</bdi></p><p><strong>بداية السنة المالية:</strong> الشهر {{ company.fiscal_year_start_month }}</p><p><strong>البلد:</strong> مصر — Egypt</p><p><strong>رقم التسجيل الضريبي:</strong> {{ company.tax_id or '—' }}</p><p><strong>نسخة المخطط:</strong> {{ company.schema_version }}</p></div>
-<p class="flash">الإعداد قيد التنفيذ — الخطوات التالية قريبًا.</p><p class="muted">تعرض هذه الصفحة بيانات الإعداد من ملف شركتك فقط. الفواتير والعملاء الحاليون ما زالوا في النظام المحاسبي الأصلي دون تغيير.</p>
+<p class="muted">تعرض هذه الصفحة بيانات الإعداد من ملف شركتك فقط. الفواتير والعملاء الحاليون ما زالوا في النظام المحاسبي الأصلي دون تغيير.</p>
+</section>
+<section class="panel"><div class="panel-heading"><h2>شجرة الحسابات</h2><span class="muted">{{ accounts|length }} حسابًا</span></div>
+<p class="muted">تتكون الشجرة من الحزمة الأساسية المشتركة، وحزمة نشاط واحدة حسب نوع الشركة، وطبقة واحدة حسب الشكل القانوني. أسماء الحسابات بالعربية أساسًا مع الاسم الإنجليزي مساندًا.</p>
+<div class="table-wrap"><table><thead><tr><th>الكود</th><th>اسم الحساب (عربي)</th><th>Name (English)</th><th>النوع</th><th>الطبقة</th></tr></thead><tbody>
+{% for account in accounts %}<tr><td><bdi>{{ account.code }}</bdi></td><td>{{ account.name_ar }}</td><td><bdi>{{ account.name_en }}</bdi></td><td>{{ kind_labels.get(account.kind, account.kind) }}</td><td>{{ pack_labels.get(account.pack, account.pack) }}</td></tr>{% else %}<tr><td colspan="5" class="empty">لا توجد حسابات في شجرة هذه الشركة.</td></tr>{% endfor %}
+</tbody></table></div>
 </section>
 {% endblock %}

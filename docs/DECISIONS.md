@@ -14,4 +14,7 @@
 - `max_companies_per_user` default1; company provisioning uses one common service for current wizard and future admin creation.
 - Company data directory configurable by `COMPANY_DATA_DIR`, outside tracked source by default; platform database is never relocated.
 - Super Admin uses platform metadata only. Sole company-file exception is read-only schema_meta health; no settings or financial access.
-- No chart of accounts, account packs, journals, invoices-per-company, reports, subscriptions or mail. Those remain unimplemented future steps.
+- Step 3 implements **only** the company chart of accounts. Journals, invoices-per-company, reports, subscriptions and mail remain unimplemented future steps.
+- Account names are bilingual: Arabic (primary/displayed) + English (secondary).
+- One company chart is **composed**: a base pack (shared) + exactly one activity pack (by company type) + exactly one legal-form layer (by legal form). Never six separate charts and never a stored per-company chart copy.
+- The chart is composed on demand from the company's own stored `type`/`legal_form`; no new company table and no company schema-version bump. Existing `schema_meta`/`company_settings` behavior is unchanged.

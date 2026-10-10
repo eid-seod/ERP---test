@@ -25,6 +25,7 @@ from super_admin.models import PlatformSetting
 from super_admin.service import AdminError, audit
 
 from .company_schema import CompanySchemaError, apply_migrations, open_read_only, read_schema_version, write_settings
+from .chart_config import ChartError, build_chart
 from .config import (
     COMPANY_TYPES, CURRENCIES, DEFAULT_COMPANY_DATA_DIR, LEGAL_FORMS,
     MAX_COMPANY_NAME_LENGTH, MAX_TAX_ID_LENGTH, SCHEMA_VERSION,
@@ -441,6 +442,30 @@ def company_workspace(company_id, user_id, expected_epoch=None, ip=None):
         "tax_id": row[5], "country": row[6], "currency_locked": bool(row[7]),
         "schema_version": version,
     }
+
+
+def read_company_chart(company_id, user_id, expected_epoch=None, ip=None):
+    """Return this owner's own composed chart of accounts, or raise CompanyError.
+
+    The chart is composed on demand from the company's own stored type and legal
+    form (base pack + activity pack + legal-form layer); it is never stored as a
+    separate per-company chart.
+    """
+    try:
+        with open_company_database(company_id, user_id, expected_epoch, ip) as connection:
+            row = connection.execute(
+                "SELECT type, legal_form FROM company_settings WHERE id=1"
+            ).fetchone()
+    except CompanyError:
+        raise
+    except (sqlite3.Error, CompanySchemaError) as exc:
+        raise CompanyError("Company database is unavailable.", 503, "company_unavailable") from exc
+    if row is None:
+        raise CompanyError("Company database is unavailable.", 503, "company_unavailable")
+    try:
+        return build_chart(row[0], row[1])
+    except ChartError as exc:
+        raise CompanyError("Company chart of accounts is unavailable.", 503, "chart_unavailable") from exc
 
 
 def health_check(company):

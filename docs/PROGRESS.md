@@ -83,3 +83,23 @@ The actual count/list is verified against Git before commit. No existing file wa
 ## Final validation before push
 
 Baseline: portfolio9/accounting38/deployment27 passed, annotated baseline tag pushed. Final: portfolio9/accounting97/deployment31 passed (real full-suite output is delivered in the external verification report). Received platform hash matches the original baseline; integrity ok; no nested Git repositories. Native same-origin HTTP signup→login→wizard→workspace→Super Admin metadata→suspension guards passed on disposable fixtures. Compose/Nginx syntax passed without production deployment. All26 existing-file edits are documented; no existing renames/deletions. New owner-only storage opening, malformed schema/limits, collision cleanup and safe-error cases passed. Original financial implementation/UI/assets/dependencies are unchanged. Push/release tag remain pending until verified by their actual outputs and opened GitHub commit link.
+
+## Step 3 — company chart of accounts
+
+**Done:** the composed, bilingual company chart of accounts. One chart per company = shared base pack + exactly one activity pack (by company type) + exactly one legal-form layer (by legal form) — never six separate charts, never a stored per-company copy. Account names are Arabic (primary) + English. Catalog/composition is the new `companies/chart_config.py`; the owner-only read is `GET /companies/<id>/chart-of-accounts` plus a native section on the existing workspace page. The chart is composed on demand from the company's own stored `type`/`legal_form`, so no new company table and no schema-version bump: existing `schema_meta`/`company_settings` behavior is unchanged. Super Admin/admin/other/anonymous access is denied; only the active owner reads their own chart. New tests: `companies/tests` → `tests/test_chart_of_accounts.py`.
+
+**Existing files edited (reason):**
+
+| Existing file | Reason |
+| --- | --- |
+| `accounting-software/companies/storage.py` | Add `read_company_chart` (member-checked) that composes the chart from stored settings. |
+| `accounting-software/companies/views.py` | Add the owner-only chart JSON route and pass the composed chart to the workspace page. |
+| `accounting-software/templates/companies/workspace.html` | Add the native bilingual chart section (existing shell/CSS only). |
+| `deployment/run_checks.py` | Run preservation `--source-only` when the untracked received DB is absent (fresh clone); unchanged when present. |
+| `docs/DECISIONS.md` | Record the Step 3 chart/account decisions. |
+
+**New files:** `companies/chart_config.py`, `tests/test_chart_of_accounts.py`, `deployment/tests/conftest.py`, `documentation/step03-chart-of-accounts.md`.
+
+**Checks:** `python deployment/run_checks.py` → portfolio **9 passed**, accounting **132 passed**, deployment **31 passed**; preservation `ok`. No `.db`/`.env`/secrets committed.
+
+**Next part (NOT started):** journal entries / company invoices / reports.
