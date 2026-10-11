@@ -103,3 +103,23 @@ Baseline: portfolio9/accounting38/deployment27 passed, annotated baseline tag pu
 **Checks:** `python deployment/run_checks.py` → portfolio **9 passed**, accounting **132 passed**, deployment **31 passed**; preservation `ok`. No `.db`/`.env`/secrets committed.
 
 **Next part (NOT started):** journal entries / company invoices / reports.
+
+## Step 3A-revised — versioned JSON data packs
+
+**Done (data + validator only):** the hardcoded `chart_config.py` catalog is replaced by versioned JSON packs in `packs/` (`base.json`, `trading.json`, `industrial.json`, `contracting.json`, `legal_form_sole_proprietorship.json`, `legal_form_joint_stock.json`), each with `"version"` and `"accounts"`. Much fuller content (92 accounts across packs; 57–67 per composed chart): cash/banks/customers/notes/prepaid, VAT input-output-settlement, withholding tax receivable/payable, suppliers, accruals, salaries/social-insurance payable, loans, fixed assets + accumulated depreciation, operating (admin/selling) expenses, depreciation, bank charges, realized/unrealized FX gain/loss, other income/expenses; trading/industrial/contracting activity packs (inventory + COGS/direct costs, WIP, spare parts, wages, production costs, scrap; contract revenue, WIP/unbilled, IPCs, retentions, subcontractor/project direct costs, advances, guarantees); equity only from the legal-form layer. Account fields: `code`, `name_ar`, `name_en`, `type`, `parent`, `is_postable`, `is_system`, `normal_balance`, `description`. Numbering 1 assets / 2 liabilities / 3 equity / 4 revenue / 5 cost of sales / 6 operating expenses / 7 other; postable only at leaves. `packs/validate.py` (required fields, types, per-pack uniqueness + disjointness across co-occurring packs, parents exist, child type = parent type, only group accounts have children) and `packs/compose.py` (`compose_chart(activity, legal_form)`, deterministic and sorted). `chart_config.py` now reads the packs through `compose` and keeps its public functions. `deployment/export_charts.py` writes `docs/chart-of-accounts-review.md` for the six combinations. New tests: `tests/test_chart_packs.py`.
+
+**Existing files edited (reason):**
+
+| Existing file | Reason |
+| --- | --- |
+| `accounting-software/companies/chart_config.py` | Replace the hardcoded catalog with a thin facade over the JSON packs; keep public functions/constants so existing routes/tests still work. |
+| `deployment/run_checks.py` | Add a `packs/validate.py` check to the standard suite. |
+| `docs/DECISIONS.md` | Record pack-based composition and the copy-at-creation (not linked) storage decision. |
+
+**New files:** `packs/base.json`, `packs/trading.json`, `packs/industrial.json`, `packs/contracting.json`, `packs/legal_form_sole_proprietorship.json`, `packs/legal_form_joint_stock.json`, `packs/validate.py`, `packs/compose.py`, `deployment/export_charts.py`, `docs/chart-of-accounts-review.md`, `tests/test_chart_packs.py`.
+
+**Checks:** `python deployment/run_checks.py` → portfolio **9 passed**, accounting **145 passed**, deployment **31 passed**, packs **OK (6 packs, 92 accounts, 6 compositions)**; preservation `ok`. No `.db`/`.env`/secrets committed.
+
+**Not implemented here (recorded only):** the copy-at-creation storage into the company database and any company table/schema-version change; UI is unchanged.
+
+**Next part (NOT started):** storage of the copied chart into the company database.

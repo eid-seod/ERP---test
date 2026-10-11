@@ -1,0 +1,93 @@
+{
+  "version": "1.0.0",
+  "accounts": [
+    {
+      "code": "3000",
+      "name_ar": "حقوق الملكية",
+      "name_en": "Equity",
+      "type": "equity",
+      "parent": null,
+      "is_postable": false,
+      "is_system": false,
+      "normal_balance": "credit",
+      "description": "Equity group"
+    },
+    {
+      "code": "3200",
+      "name_ar": "رأس المال المدفوع",
+      "name_en": "Issued share capital",
+      "type": "equity",
+      "parent": "3000",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "credit",
+      "description": "Issued share capital"
+    },
+    {
+      "code": "3210",
+      "name_ar": "علاوة الإصدار",
+      "name_en": "Share premium",
+      "type": "equity",
+      "parent": "3000",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "credit",
+      "description": "Share premium"
+    },
+    {
+      "code": "3220",
+      "name_ar": "الاحتياطي القانوني",
+      "name_en": "Legal reserve",
+      "type": "equity",
+      "parent": "3000",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "credit",
+      "description": "Legal reserve"
+    },
+    {
+      "code": "3230",
+      "name_ar": "احتياطيات أخرى",
+      "name_en": "Other reserves",
+      "type": "equity",
+      "parent": "3000",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "credit",
+      "description": "Other reserves"
+    },
+    {
+      "code": "3240",
+      "name_ar": "الأرباح المحتجزة",
+      "name_en": "Retained earnings",
+      "type": "equity",
+      "parent": "3000",
+      "is_postable": true,
+      "is_system": true,
+      "normal_balance": "credit",
+      "description": "Accumulated results"
+    },
+    {
+      "code": "3250",
+      "name_ar": "جاري المساهمين",
+      "name_en": "Shareholders' current accounts",
+      "type": "equity",
+      "parent": "3000",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "credit",
+      "description": "Shareholders' current accounts"
+    },
+    {
+      "code": "3260",
+      "name_ar": "توزيعات أرباح مستحقة الدفع",
+      "name_en": "Dividends payable",
+      "type": "equity",
+      "parent": "3000",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "credit",
+      "description": "Dividends payable"
+    }
+  ]
+}

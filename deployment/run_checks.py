@@ -36,6 +36,8 @@ if __name__ == '__main__':
             if module == 'accounting-software':
                 environment['DATABASE_URL'] = 'sqlite:///' + (Path(temporary) / 'bootstrap.db').as_posix()
             subprocess.run([sys.executable, '-m', 'pytest', '-q'], cwd=ROOT / module, env=environment, check=True)
+    print('Checking: packs', flush=True)
+    subprocess.run([sys.executable, str(ROOT / 'packs/validate.py')], check=True)
     subprocess.run(['node', '--check', str(ROOT / 'portfolio/static/js/portfolio.js')], check=True)
     subprocess.run(['node', '--check', str(ROOT / 'accounting-software/static/js/super_admin.js')], check=True)
     preservation = [sys.executable, str(ROOT / 'deployment/verify_preservation.py')]

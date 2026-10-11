@@ -1,0 +1,159 @@
+{
+  "version": "1.0.0",
+  "accounts": [
+    {
+      "code": "1400",
+      "name_ar": "أعمال تحت التنفيذ",
+      "name_en": "Contract work in progress",
+      "type": "asset",
+      "parent": "1100",
+      "is_postable": false,
+      "is_system": false,
+      "normal_balance": "debit",
+      "description": "Contract WIP group"
+    },
+    {
+      "code": "1410",
+      "name_ar": "أعمال تحت التنفيذ - غير مفوترة",
+      "name_en": "Work in progress - unbilled",
+      "type": "asset",
+      "parent": "1400",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "debit",
+      "description": "Unbilled work in progress"
+    },
+    {
+      "code": "1420",
+      "name_ar": "دفعات مقدمة لمقاولي الباطن",
+      "name_en": "Advances to subcontractors",
+      "type": "asset",
+      "parent": "1400",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "debit",
+      "description": "Advances to subcontractors"
+    },
+    {
+      "code": "1430",
+      "name_ar": "ضمانات حسن التنفيذ وكراسة الشروط",
+      "name_en": "Performance guarantees and bid bonds",
+      "type": "asset",
+      "parent": "1400",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "debit",
+      "description": "Performance guarantees and bid bonds"
+    },
+    {
+      "code": "1440",
+      "name_ar": "دفعات محتجزة لدى العملاء",
+      "name_en": "Retentions receivable",
+      "type": "asset",
+      "parent": "1400",
+      "is_postable": true,
+      "is_system": true,
+      "normal_balance": "debit",
+      "description": "Retentions receivable control"
+    },
+    {
+      "code": "2400",
+      "name_ar": "المستخلصات ودفعات العملاء",
+      "name_en": "Progress billings and customer advances",
+      "type": "liability",
+      "parent": "2100",
+      "is_postable": false,
+      "is_system": false,
+      "normal_balance": "credit",
+      "description": "Progress billings group"
+    },
+    {
+      "code": "2410",
+      "name_ar": "المستخلصات (فواتير الأعمال)",
+      "name_en": "Progress billings (IPCs)",
+      "type": "liability",
+      "parent": "2400",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "credit",
+      "description": "Interim payment certificates"
+    },
+    {
+      "code": "2420",
+      "name_ar": "دفعات مقدمة من العملاء",
+      "name_en": "Advances from customers",
+      "type": "liability",
+      "parent": "2400",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "credit",
+      "description": "Advances from customers"
+    },
+    {
+      "code": "2430",
+      "name_ar": "دفعات محتجزة لمقاولي الباطن",
+      "name_en": "Retentions payable",
+      "type": "liability",
+      "parent": "2400",
+      "is_postable": true,
+      "is_system": true,
+      "normal_balance": "credit",
+      "description": "Retentions payable control"
+    },
+    {
+      "code": "4300",
+      "name_ar": "إيرادات المقاولات",
+      "name_en": "Contract revenue",
+      "type": "revenue",
+      "parent": "4000",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "credit",
+      "description": "Contract revenue"
+    },
+    {
+      "code": "5300",
+      "name_ar": "تكاليف المواد المباشرة",
+      "name_en": "Direct material costs",
+      "type": "expense",
+      "parent": "5000",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "debit",
+      "description": "Direct materials"
+    },
+    {
+      "code": "5310",
+      "name_ar": "تكاليف العمالة المباشرة",
+      "name_en": "Direct labor costs",
+      "type": "expense",
+      "parent": "5000",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "debit",
+      "description": "Direct labor"
+    },
+    {
+      "code": "5320",
+      "name_ar": "تكاليف المعدات",
+      "name_en": "Equipment costs",
+      "type": "expense",
+      "parent": "5000",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "debit",
+      "description": "Equipment costs"
+    },
+    {
+      "code": "5330",
+      "name_ar": "تكاليف مقاولي الباطن",
+      "name_en": "Subcontractor costs",
+      "type": "expense",
+      "parent": "5000",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "debit",
+      "description": "Subcontractor costs"
+    }
+  ]
+}

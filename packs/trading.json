@@ -1,0 +1,93 @@
+{
+  "version": "1.0.0",
+  "accounts": [
+    {
+      "code": "1200",
+      "name_ar": "المخزون",
+      "name_en": "Inventory",
+      "type": "asset",
+      "parent": "1100",
+      "is_postable": false,
+      "is_system": false,
+      "normal_balance": "debit",
+      "description": "Inventory group"
+    },
+    {
+      "code": "1210",
+      "name_ar": "مخزون البضاعة",
+      "name_en": "Merchandise inventory",
+      "type": "asset",
+      "parent": "1200",
+      "is_postable": true,
+      "is_system": true,
+      "normal_balance": "debit",
+      "description": "Merchandise inventory control"
+    },
+    {
+      "code": "1220",
+      "name_ar": "بضاعة بالطريق",
+      "name_en": "Goods in transit",
+      "type": "asset",
+      "parent": "1200",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "debit",
+      "description": "Goods in transit"
+    },
+    {
+      "code": "4100",
+      "name_ar": "المبيعات",
+      "name_en": "Sales",
+      "type": "revenue",
+      "parent": "4000",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "credit",
+      "description": "Sales of traded goods"
+    },
+    {
+      "code": "4110",
+      "name_ar": "مردودات وخصومات المبيعات",
+      "name_en": "Sales returns and discounts",
+      "type": "revenue",
+      "parent": "4000",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "debit",
+      "description": "Contra-revenue"
+    },
+    {
+      "code": "5100",
+      "name_ar": "المشتريات",
+      "name_en": "Purchases",
+      "type": "expense",
+      "parent": "5000",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "debit",
+      "description": "Purchases"
+    },
+    {
+      "code": "5110",
+      "name_ar": "مردودات وخصومات المشتريات",
+      "name_en": "Purchase returns and discounts",
+      "type": "expense",
+      "parent": "5000",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "credit",
+      "description": "Contra-expense"
+    },
+    {
+      "code": "5120",
+      "name_ar": "تكلفة المبيعات",
+      "name_en": "Cost of goods sold",
+      "type": "expense",
+      "parent": "5000",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "debit",
+      "description": "Cost of goods sold"
+    }
+  ]
+}

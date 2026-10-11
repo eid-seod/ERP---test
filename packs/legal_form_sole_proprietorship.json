@@ -1,0 +1,49 @@
+{
+  "version": "1.0.0",
+  "accounts": [
+    {
+      "code": "3000",
+      "name_ar": "حقوق الملكية",
+      "name_en": "Equity",
+      "type": "equity",
+      "parent": null,
+      "is_postable": false,
+      "is_system": false,
+      "normal_balance": "credit",
+      "description": "Equity group"
+    },
+    {
+      "code": "3100",
+      "name_ar": "رأس مال المالك",
+      "name_en": "Owner's capital",
+      "type": "equity",
+      "parent": "3000",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "credit",
+      "description": "Owner's capital"
+    },
+    {
+      "code": "3110",
+      "name_ar": "جاري المالك (المسحوبات)",
+      "name_en": "Owner's current account (drawings)",
+      "type": "equity",
+      "parent": "3000",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "debit",
+      "description": "Owner's drawings"
+    },
+    {
+      "code": "3120",
+      "name_ar": "الأرباح المحتجزة",
+      "name_en": "Retained earnings",
+      "type": "equity",
+      "parent": "3000",
+      "is_postable": true,
+      "is_system": true,
+      "normal_balance": "credit",
+      "description": "Accumulated results"
+    }
+  ]
+}

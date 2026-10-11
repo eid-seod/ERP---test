@@ -16,5 +16,10 @@
 - Super Admin uses platform metadata only. Sole company-file exception is read-only schema_meta health; no settings or financial access.
 - Step 3 implements **only** the company chart of accounts. Journals, invoices-per-company, reports, subscriptions and mail remain unimplemented future steps.
 - Account names are bilingual: Arabic (primary/displayed) + English (secondary).
-- One company chart is **composed**: a base pack (shared) + exactly one activity pack (by company type) + exactly one legal-form layer (by legal form). Never six separate charts and never a stored per-company chart copy.
-- The chart is composed on demand from the company's own stored `type`/`legal_form`; no new company table and no company schema-version bump. Existing `schema_meta`/`company_settings` behavior is unchanged.
+- One company chart is **composed**: a base pack (shared) + exactly one activity pack (by company type) + exactly one legal-form layer (by legal form). Never six separate charts.
+- The chart data lives in versioned JSON packs (`packs/*.json`) validated by `packs/validate.py` and combined by `packs/compose.py` (data + validator only).
+- The chart is composed from the packs **ONCE at company creation and COPIED into the company database** (not linked). Later pack updates never change existing companies.
+- Account fields: `code`, `name_ar`, `name_en`, `type`, `parent`, `is_postable`, `is_system`, `normal_balance`, `description`.
+- Code numbering: 1 assets, 2 liabilities, 3 equity, 4 revenue, 5 cost of sales/direct costs, 6 operating expenses, 7 other income/expenses. Postable accounts exist only at leaf level; only group accounts have children.
+- `is_system=true`: customers, suppliers, VAT, withholding tax, retained earnings/current-year result, FX gain/loss; plus inventory-control and retention-control accounts in the activity packs.
+- This step is data + validator only: **no company table, no schema-version bump and no UI change** are implemented yet; the copy-at-creation storage is a recorded decision, not yet built.

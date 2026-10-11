@@ -1,0 +1,148 @@
+{
+  "version": "1.0.0",
+  "accounts": [
+    {
+      "code": "1300",
+      "name_ar": "المخزون",
+      "name_en": "Inventory",
+      "type": "asset",
+      "parent": "1100",
+      "is_postable": false,
+      "is_system": false,
+      "normal_balance": "debit",
+      "description": "Inventory group"
+    },
+    {
+      "code": "1310",
+      "name_ar": "مخزون المواد الخام",
+      "name_en": "Raw materials inventory",
+      "type": "asset",
+      "parent": "1300",
+      "is_postable": true,
+      "is_system": true,
+      "normal_balance": "debit",
+      "description": "Raw materials inventory control"
+    },
+    {
+      "code": "1320",
+      "name_ar": "إنتاج تحت التشغيل",
+      "name_en": "Work in progress",
+      "type": "asset",
+      "parent": "1300",
+      "is_postable": true,
+      "is_system": true,
+      "normal_balance": "debit",
+      "description": "Work in progress control"
+    },
+    {
+      "code": "1330",
+      "name_ar": "مخزون الإنتاج التام",
+      "name_en": "Finished goods inventory",
+      "type": "asset",
+      "parent": "1300",
+      "is_postable": true,
+      "is_system": true,
+      "normal_balance": "debit",
+      "description": "Finished goods inventory control"
+    },
+    {
+      "code": "1340",
+      "name_ar": "قطع الغيار",
+      "name_en": "Spare parts inventory",
+      "type": "asset",
+      "parent": "1300",
+      "is_postable": true,
+      "is_system": true,
+      "normal_balance": "debit",
+      "description": "Spare parts inventory control"
+    },
+    {
+      "code": "4200",
+      "name_ar": "إيرادات بيع الإنتاج",
+      "name_en": "Revenue from sales of manufactured goods",
+      "type": "revenue",
+      "parent": "4000",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "credit",
+      "description": "Manufactured goods revenue"
+    },
+    {
+      "code": "4210",
+      "name_ar": "مردودات وخصومات المبيعات",
+      "name_en": "Sales returns and discounts",
+      "type": "revenue",
+      "parent": "4000",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "debit",
+      "description": "Contra-revenue"
+    },
+    {
+      "code": "5200",
+      "name_ar": "المواد الخام المستخدمة",
+      "name_en": "Raw materials used",
+      "type": "expense",
+      "parent": "5000",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "debit",
+      "description": "Raw materials consumed"
+    },
+    {
+      "code": "5210",
+      "name_ar": "العمالة المباشرة",
+      "name_en": "Direct labor",
+      "type": "expense",
+      "parent": "5000",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "debit",
+      "description": "Direct labor"
+    },
+    {
+      "code": "5220",
+      "name_ar": "التكاليف الصناعية غير المباشرة",
+      "name_en": "Manufacturing overhead",
+      "type": "expense",
+      "parent": "5000",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "debit",
+      "description": "Manufacturing overhead"
+    },
+    {
+      "code": "5230",
+      "name_ar": "تكلفة الإنتاج التام",
+      "name_en": "Cost of goods manufactured",
+      "type": "expense",
+      "parent": "5000",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "debit",
+      "description": "Cost of goods manufactured"
+    },
+    {
+      "code": "5240",
+      "name_ar": "تكلفة المبيعات",
+      "name_en": "Cost of goods sold",
+      "type": "expense",
+      "parent": "5000",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "debit",
+      "description": "Cost of goods sold"
+    },
+    {
+      "code": "5250",
+      "name_ar": "الخردة والهالك",
+      "name_en": "Scrap and waste",
+      "type": "expense",
+      "parent": "5000",
+      "is_postable": true,
+      "is_system": false,
+      "normal_balance": "debit",
+      "description": "Scrap and waste"
+    }
+  ]
+}
